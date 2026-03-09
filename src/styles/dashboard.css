@@ -1,0 +1,200 @@
+/* Mission Control Dashboard Custom Styles */
+
+:root {
+  /* Dark theme colors */
+  --dashboard-bg: #0a0a0f;
+  --dashboard-surface: rgba(15, 15, 25, 0.3);
+  --dashboard-glass: rgba(20, 20, 35, 0.3);
+  --dashboard-glass-border: rgba(255, 255, 255, 0.06);
+  
+  /* Neon accents */
+  --neon-cyan: #00e5ff;
+  --neon-purple: #b366ff;
+  --neon-orange: #ff8c42;
+  --neon-green: #39ff14;
+  --neon-pink: #ff00aa;
+  
+  /* Status colors */
+  --status-success: #00ff88;
+  --status-warning: #ffaa00;
+  --status-error: #ff3366;
+  --status-info: #00c3ff;
+  
+  /* Spacing system */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* Light mode variables */
+.light-mode {
+  --dashboard-bg: #f5f7fa;
+  --dashboard-surface: rgba(255, 255, 255, 0.4);
+  --dashboard-glass: rgba(255, 255, 255, 0.4);
+  --dashboard-glass-border: rgba(0, 0, 0, 0.08);
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+}
+
+/* Dark mode variables */
+.dark-mode {
+  --dashboard-bg: #0a0a0f;
+  --dashboard-surface: rgba(15, 15, 25, 0.3);
+  --dashboard-glass: rgba(20, 20, 35, 0.3);
+  --dashboard-glass-border: rgba(255, 255, 255, 0.06);
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+}
+
+/* Glassmorphism base */
+.glass-card {
+  background: rgba(20, 20, 35, 0.25);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.light-mode .glass-card {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-hover:hover {
+  background: rgba(25, 25, 40, 0.4);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+}
+
+.light-mode .glass-card-hover:hover {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* Neon glow effects */
+.neon-glow-cyan {
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3), 0 0 20px rgba(0, 229, 255, 0.2);
+}
+
+.neon-glow-purple {
+  box-shadow: 0 0 10px rgba(179, 102, 255, 0.3), 0 0 20px rgba(179, 102, 255, 0.2);
+}
+
+.neon-glow-orange {
+  box-shadow: 0 0 10px rgba(255, 140, 66, 0.3), 0 0 20px rgba(255, 140, 66, 0.2);
+}
+
+.neon-border-cyan {
+  border: 1px solid var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+}
+
+.neon-border-purple {
+  border: 1px solid var(--neon-purple);
+  box-shadow: 0 0 10px rgba(179, 102, 255, 0.2);
+}
+
+/* Gradient overlays */
+.gradient-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  opacity: 0.5;
+}
+
+/* Smooth transitions */
+.smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Status indicators */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.status-success {
+  background: var(--status-success);
+  box-shadow: 0 0 8px var(--status-success);
+}
+
+.status-warning {
+  background: var(--status-warning);
+  box-shadow: 0 0 8px var(--status-warning);
+}
+
+.status-error {
+  background: var(--status-error);
+  box-shadow: 0 0 8px var(--status-error);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Typography enhancements */
+.metric-value {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.label-text {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+}
