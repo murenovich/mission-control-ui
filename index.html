@@ -5,6 +5,12 @@
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Life OS Prototype</title>
+      <script type="module">
+        // React Grab only runs in development so the production bundle stays unchanged.
+        if (import.meta.env.DEV) {
+          import('react-grab');
+        }
+      </script>
     </head>
 
     <body>

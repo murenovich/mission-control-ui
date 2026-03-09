@@ -79,6 +79,27 @@ const getMeetingPlatformName = (platform: 'zoom' | 'meet' | 'teams') => {
   }
 };
 
+function MeetingButtonContent({
+  platform,
+  compact = false,
+}: {
+  platform: 'zoom' | 'meet' | 'teams';
+  compact?: boolean;
+}) {
+  return (
+    <>
+      <img
+        src={getMeetingLogo(platform)}
+        alt={getMeetingPlatformName(platform)}
+        className={compact ? 'h-4 w-auto shrink-0' : 'h-5 w-auto shrink-0'}
+      />
+      <span className="truncate">
+        {compact ? 'Join Meeting' : `Join ${getMeetingPlatformName(platform)}`}
+      </span>
+    </>
+  );
+}
+
 export function Calendar() {
   const { isDarkMode } = useTheme();
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -382,21 +403,12 @@ export function Calendar() {
           </div>
           
           {event.isVirtual && event.meetingLink && event.meetingPlatform && (
-            <>
-              <button
-                onClick={() => joinMeeting(event.meetingLink!)}
-                className={`w-full px-2 py-1.5 rounded text-xs font-medium smooth-transition mb-2 ${getMeetingButtonStyle(event.meetingPlatform)}`}
-              >
-                Join Meeting
-              </button>
-              <div className="flex items-center justify-center pt-2 border-t border-white/10">
-                <img 
-                  src={getMeetingLogo(event.meetingPlatform)} 
-                  alt={getMeetingPlatformName(event.meetingPlatform)}
-                  className="h-4 w-auto opacity-70"
-                />
-              </div>
-            </>
+            <button
+              onClick={() => joinMeeting(event.meetingLink!)}
+              className={`w-full px-2 py-1.5 rounded text-xs font-medium smooth-transition inline-flex items-center justify-center gap-2 ${getMeetingButtonStyle(event.meetingPlatform)}`}
+            >
+              <MeetingButtonContent platform={event.meetingPlatform} compact />
+            </button>
           )}
         </div>
       );
@@ -495,19 +507,10 @@ export function Calendar() {
           <div>
             <button
               onClick={() => joinMeeting(event.meetingLink!)}
-              className={`w-full px-3 py-2.5 rounded-lg text-sm font-medium smooth-transition ${getMeetingButtonStyle(event.meetingPlatform)}`}
+              className={`w-full px-3 py-2.5 rounded-lg text-sm font-medium smooth-transition inline-flex items-center justify-center gap-2 ${getMeetingButtonStyle(event.meetingPlatform)}`}
             >
-              Join {getMeetingPlatformName(event.meetingPlatform)}
+              <MeetingButtonContent platform={event.meetingPlatform} />
             </button>
-            
-            {/* Platform Logo */}
-            <div className={`flex items-center justify-center mt-3 pt-3 border-t ${isDarkMode ? 'border-white/10' : 'border-black/10'}`}>
-              <img 
-                src={getMeetingLogo(event.meetingPlatform)} 
-                alt={getMeetingPlatformName(event.meetingPlatform)}
-                className="h-6 w-auto opacity-60"
-              />
-            </div>
           </div>
         )}
       </div>
@@ -887,19 +890,12 @@ export function Calendar() {
                       {/* Join Button */}
                       <div className="flex flex-col items-end gap-2">
                         {event.isVirtual && event.meetingLink && event.meetingPlatform && (
-                          <>
-                            <button
-                              onClick={() => joinMeeting(event.meetingLink!)}
-                              className={`px-4 py-2 rounded-lg text-xs font-medium smooth-transition ${getMeetingButtonStyle(event.meetingPlatform)}`}
-                            >
-                              Join Meeting
-                            </button>
-                            <img 
-                              src={getMeetingLogo(event.meetingPlatform)} 
-                              alt={getMeetingPlatformName(event.meetingPlatform)}
-                              className="h-5 w-auto opacity-50"
-                            />
-                          </>
+                          <button
+                            onClick={() => joinMeeting(event.meetingLink!)}
+                            className={`px-4 py-2 rounded-lg text-xs font-medium smooth-transition inline-flex items-center gap-2 ${getMeetingButtonStyle(event.meetingPlatform)}`}
+                          >
+                            <MeetingButtonContent platform={event.meetingPlatform} compact />
+                          </button>
                         )}
                       </div>
                     </div>

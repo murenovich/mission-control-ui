@@ -1,4 +1,3 @@
-import './styles';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Layout, Menu, Sidebar as SidebarIcon, Grid, Columns, Rows, PanelLeft, PanelRight, ChevronLeft, ChevronRight } from 'lucide-react';
 

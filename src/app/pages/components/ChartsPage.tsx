@@ -1,4 +1,3 @@
-import './styles';
 import { useTheme } from '../../contexts/ThemeContext';
 import { AreaChart } from '../../components/charts/AreaChart';
 import { BarChart } from '../../components/charts/BarChart';

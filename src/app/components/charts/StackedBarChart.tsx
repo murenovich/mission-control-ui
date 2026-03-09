@@ -53,13 +53,13 @@ export function StackedBarChart({
           >
             {data.map((item, barIdx) => {
               const total = item.segments.reduce((sum, seg) => sum + seg.value, 0);
-              const barHeight = (total / maxTotal) * 100;
+              const barHeight = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
               const isBarHovered = hoveredBar === barIdx;
 
               return (
                 <div
                   key={barIdx}
-                  className="flex-1 flex flex-col items-center gap-3"
+                  className="flex-1 h-full flex flex-col items-center gap-3"
                   onMouseEnter={() => setHoveredBar(barIdx)}
                   onMouseLeave={() => {
                     setHoveredBar(null);
@@ -80,35 +80,38 @@ export function StackedBarChart({
                   </div>
 
                   {/* Stacked bar */}
-                  <div 
-                    className="w-full flex flex-col-reverse gap-0.5"
-                    style={{ height: `${barHeight}%` }}
-                  >
-                    {item.segments.map((segment, segIdx) => {
-                      const segmentHeight = (segment.value / total) * 100;
-                      const isSegmentHovered = isBarHovered && hoveredSegment === segIdx;
+                  <div className="w-full flex-1 flex items-end">
+                    {/* The stack needs a real parent height, otherwise percentage-based segment heights collapse to zero. */}
+                    <div
+                      className="w-full flex flex-col-reverse gap-0.5"
+                      style={{ height: `${barHeight}%` }}
+                    >
+                      {item.segments.map((segment, segIdx) => {
+                        const segmentHeight = total > 0 ? (segment.value / total) * 100 : 0;
+                        const isSegmentHovered = isBarHovered && hoveredSegment === segIdx;
 
-                      return (
-                        <div
-                          key={segIdx}
-                          className="w-full rounded-sm smooth-transition cursor-pointer relative group"
-                          style={{
-                            height: `${segmentHeight}%`,
-                            backgroundColor: segment.color,
-                            opacity: hoveredSegment === null || isSegmentHovered ? 1 : 0.5,
-                          }}
-                          onMouseEnter={() => setHoveredSegment(segIdx)}
-                          title={`${segment.label}: ${segment.value}`}
-                        >
-                          {/* Segment value on hover */}
-                          {isSegmentHovered && (
-                            <div className="absolute -top-6 left-1/2 -translate-x-1/2 glass-card px-2 py-1 rounded text-xs whitespace-nowrap z-10">
-                              {segment.label}: {segment.value}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+                        return (
+                          <div
+                            key={segIdx}
+                            className="w-full rounded-sm smooth-transition cursor-pointer relative group"
+                            style={{
+                              height: `${segmentHeight}%`,
+                              backgroundColor: segment.color,
+                              opacity: hoveredSegment === null || isSegmentHovered ? 1 : 0.5,
+                            }}
+                            onMouseEnter={() => setHoveredSegment(segIdx)}
+                            title={`${segment.label}: ${segment.value}`}
+                          >
+                            {/* Segment value on hover */}
+                            {isSegmentHovered && (
+                              <div className="absolute -top-6 left-1/2 -translate-x-1/2 glass-card px-2 py-1 rounded text-xs whitespace-nowrap z-10">
+                                {segment.label}: {segment.value}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
 
                   {/* Label */}

@@ -1,6 +1,5 @@
 @import 'tailwindcss' source(none);
 @source '../main.tsx';
+/* Component-library routes stay in the primary app sheet so navigation does not inject a second Tailwind base layer. */
 @source '../app/**/*.{js,ts,jsx,tsx}';
 @source '../lib/**/*.{js,ts,jsx,tsx}';
-@source not '../app/pages/components/**/*.{js,ts,jsx,tsx}';
-@source not '../app/components/ui/**/*.{js,ts,jsx,tsx}';

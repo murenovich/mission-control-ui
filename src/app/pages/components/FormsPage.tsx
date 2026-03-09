@@ -1,4 +1,3 @@
-import './styles';
 import { useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Search, Eye, EyeOff, Calendar, Clock, Upload, X } from 'lucide-react';

@@ -315,7 +315,7 @@ export function Header() {
               {/* Messages panel */}
               {messagesOpen && (
                 <div
-                  className="absolute top-full right-0 mt-2 w-80 glass-card rounded-lg shadow-xl border border-white/10 overflow-hidden z-50"
+                  className="absolute top-full right-0 mt-2 w-80 sm:w-96 max-h-[min(75vh,44rem)] glass-card rounded-lg shadow-xl border border-white/10 overflow-hidden z-50 flex flex-col"
                   style={{ background: isDarkMode ? 'rgba(15, 15, 25, 0.95)' : 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(40px)' }}
                   onMouseEnter={() => setMessagesOpen(true)}
                   onMouseLeave={() => setMessagesOpen(false)}
@@ -333,7 +333,7 @@ export function Header() {
                   </div>
 
                   {/* Messages list */}
-                  <div className="max-h-96 overflow-y-auto">
+                  <div className="min-h-0 flex-1 overflow-y-auto">
                     {/* Discord Message */}
                     <Link
                       to="/messages/discord"
@@ -472,7 +472,7 @@ export function Header() {
               {/* Notifications panel */}
               {notificationsOpen && (
                 <div
-                  className="absolute top-full right-0 mt-2 w-80 glass-card rounded-lg shadow-xl border border-white/10 overflow-hidden z-50"
+                  className="absolute top-full right-0 mt-2 w-80 sm:w-96 max-h-[min(75vh,44rem)] glass-card rounded-lg shadow-xl border border-white/10 overflow-hidden z-50 flex flex-col"
                   style={{ background: isDarkMode ? 'rgba(15, 15, 25, 0.95)' : 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(40px)' }}
                   onMouseEnter={() => setNotificationsOpen(true)}
                   onMouseLeave={() => setNotificationsOpen(false)}
@@ -500,7 +500,7 @@ export function Header() {
                   </div>
 
                   {/* Notifications list */}
-                  <div className="max-h-96 overflow-y-auto">
+                  <div className="min-h-0 flex-1 overflow-y-auto">
                     {notifications.map((notification) => {
                       const Icon = notification.icon;
                       return (

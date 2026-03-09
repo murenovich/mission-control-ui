@@ -18,6 +18,24 @@ A reusable React design library extracted from the Mission Control dashboard so 
 - `npm run typecheck` runs TypeScript checks
 - `npm run pack:lib` builds the library and creates an installable tarball in `dist/package`
 
+## Local Development
+
+Start the demo app locally with:
+
+```bash
+npm run dev
+```
+
+The Vite app runs on [http://localhost:5173](http://localhost:5173) by default.
+
+### React Grab In Dev
+
+`react-grab` is enabled only in local development so you can inspect and reference rendered UI without affecting the production build.
+
+- look for the small floating React Grab toolbar in the bottom-right corner
+- hover an element and press `Cmd+C` on macOS or `Ctrl+C` on Windows/Linux to copy its context
+- use the toolbar to select elements, review capture history, or temporarily disable React Grab
+
 ## Install In Another Project
 
 ### Option 1: Local file dependency

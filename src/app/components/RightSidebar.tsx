@@ -129,8 +129,9 @@ export function RightSidebar() {
   };
 
   return (
+    // Keep the rail itself overflow-visible so the external collapse control is not clipped.
     <aside
-      className="hidden xl:flex flex-col glass-card border-l border-white/5 overflow-hidden transition-all duration-300 ease-in-out relative z-50"
+      className="hidden xl:flex flex-col glass-card border-l border-white/5 overflow-visible transition-all duration-300 ease-in-out relative z-50"
       style={{ 
         width: `${rightSidebarWidth}px`,
         background: isDarkMode ? 'rgba(15, 15, 25, 0.3)' : 'rgba(255, 255, 255, 0.4)', 
@@ -153,7 +154,7 @@ export function RightSidebar() {
       </button>
 
       {rightSidebarExpanded ? (
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 min-h-0 overflow-y-auto p-6 space-y-6">
           {/* Notifications Section */}
           <div className="glass-card rounded-lg overflow-hidden">
             <div className={`p-4 border-b ${isDarkMode ? 'border-white/5' : 'border-black/5'}`}>

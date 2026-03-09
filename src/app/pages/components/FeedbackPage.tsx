@@ -1,4 +1,3 @@
-import './styles';
 import { useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { CheckCircle, AlertCircle, Info, AlertTriangle, Loader, Bell, X } from 'lucide-react';
