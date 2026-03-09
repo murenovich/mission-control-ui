@@ -99,6 +99,17 @@ export function App() {
 - `mission-control-ui/screens` exports the reusable route-level screens and their types.
 - `mission-control-ui/demo` exports demo fixtures for local previews and examples.
 
+## Workflow
+
+This repo now uses a lightweight GitHub and Changesets workflow for cleaner day-to-day collaboration:
+
+- create feature branches from `main`, preferably as `codex/<description>`
+- run `npm run ci` before opening a PR
+- add a changeset with `npm run changeset` when the published package changes
+- rely on the release workflow on `main` to prepare version bumps, tags, and npm releases
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full branch, PR, and release process.
+
 ## Major Reusable Screens
 
 - `HealthOverviewScreen`
