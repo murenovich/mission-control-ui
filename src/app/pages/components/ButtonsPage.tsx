@@ -1,4 +1,3 @@
-import './styles';
 import { useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Plus, Save, Trash2, Download, Upload, Edit2, Check, X, ChevronRight, ArrowRight, Loader, Play, Pause, Star, Heart, Share2, Settings } from 'lucide-react';

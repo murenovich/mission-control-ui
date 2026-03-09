@@ -552,6 +552,8 @@ export function Goals() {
                         ? 'bg-white/5 border-white/10 text-white/90 focus:border-cyan-400/50'
                         : 'bg-white/30 border-black/10 text-black/90 focus:border-cyan-400/50'
                     }`}
+                    // Match the native picker chrome to the active theme so the calendar icon stays visible.
+                    style={{ colorScheme: isDarkMode ? 'dark' : 'light' }}
                   />
                 </div>
               </div>
