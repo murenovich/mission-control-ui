@@ -104,7 +104,7 @@ function PerformanceChart() {
       values: [70, 72, 68, 75, 82, 85, 88, 92],
       color: 'orange',
     },
-  };
+  } as const;
 
   const currentData = data[selectedMetric];
   const maxValue = Math.max(...currentData.values);
@@ -205,6 +205,7 @@ function CategoryBreakdown() {
   ];
 
   const total = categories.reduce((sum, cat) => sum + cat.value, 0);
+  let cumulativeOffset = 0;
 
   return (
     <div className="glass-card p-6">
@@ -218,10 +219,10 @@ function CategoryBreakdown() {
           
           {/* Segments */}
           <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-            {categories.reduce((acc, category, index) => {
+            {categories.map((category) => {
               const percentage = (category.value / total) * 100;
               const strokeDasharray = `${percentage * 2.827} 282.7`; // Circumference = 2πr = 282.7
-              const offset = acc;
+              const offset = cumulativeOffset;
               
               const colors = {
                 cyan: '#00e5ff',
@@ -230,10 +231,9 @@ function CategoryBreakdown() {
                 orange: '#ff8c42',
               };
 
-              acc += percentage * 2.827;
+              cumulativeOffset += percentage * 2.827;
 
-              return [
-                ...acc,
+              return (
                 <circle
                   key={category.name}
                   cx="50"
@@ -248,9 +248,9 @@ function CategoryBreakdown() {
                   opacity={selectedCategory === category.name || selectedCategory === null ? 1 : 0.3}
                   onMouseEnter={() => setSelectedCategory(category.name)}
                   onMouseLeave={() => setSelectedCategory(null)}
-                />,
-              ];
-            }, [] as any)}
+                />
+              );
+            })}
           </svg>
 
           {/* Center text */}

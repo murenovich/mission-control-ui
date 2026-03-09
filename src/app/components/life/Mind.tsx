@@ -7,13 +7,16 @@ import { AddCourseModal } from './AddCourseModal';
 import { AddBookModal } from './AddBookModal';
 import { AddSkillModal } from './AddSkillModal';
 
+type MindView = 'dashboard' | 'learning' | 'reading' | 'skills' | 'ideas' | 'focus';
+type CategoryTone = 'cyan' | 'green' | 'purple' | 'orange' | 'yellow' | 'blue' | 'pink' | 'gray';
+
 export function Mind() {
   const { isDarkMode } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   
   // Get active view from URL path
-  const getActiveViewFromPath = (): 'dashboard' | 'learning' | 'reading' | 'skills' | 'ideas' | 'focus' => {
+  const getActiveViewFromPath = (): MindView => {
     const path = location.pathname;
     if (path.includes('/mind/learning')) return 'learning';
     if (path.includes('/mind/reading')) return 'reading';
@@ -23,7 +26,7 @@ export function Mind() {
     return 'dashboard';
   };
 
-  const [activeView, setActiveView] = useState<'dashboard' | 'learning' | 'reading' | 'skills' | 'ideas' | 'focus'>(getActiveViewFromPath());
+  const [activeView, setActiveView] = useState<MindView>(getActiveViewFromPath());
   const [isQuickCaptureOpen, setIsQuickCaptureOpen] = useState(false);
   const [isAddCourseOpen, setIsAddCourseOpen] = useState(false);
   const [isAddBookOpen, setIsAddBookOpen] = useState(false);
@@ -35,7 +38,7 @@ export function Mind() {
   }, [location.pathname]);
 
   // Navigate when view changes
-  const handleViewChange = (view: 'dashboard' | 'learning' | 'reading' | 'skills' | 'ideas' | 'focus') => {
+  const handleViewChange = (view: MindView) => {
     navigate(`/mind/${view}`);
   };
 
@@ -105,7 +108,7 @@ export function Mind() {
   };
 
   const getCategoryColor = (category: string) => {
-    const colors: any = {
+    const colors: Record<string, CategoryTone> = {
       Technical: 'cyan',
       Finance: 'green',
       Product: 'purple',
@@ -166,12 +169,12 @@ export function Mind() {
           { id: 'skills', label: 'Skills', icon: Zap },
           { id: 'ideas', label: 'Ideas', icon: Lightbulb },
           { id: 'focus', label: 'Focus', icon: Target },
-        ].map((view) => {
+        ].map((view: { id: MindView; label: string; icon: typeof Brain }) => {
           const Icon = view.icon;
           return (
             <button
               key={view.id}
-              onClick={() => handleViewChange(view.id as any)}
+              onClick={() => handleViewChange(view.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg smooth-transition text-sm font-medium ${
                 activeView === view.id
                   ? isDarkMode

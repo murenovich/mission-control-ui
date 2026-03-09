@@ -1,3 +1,4 @@
+import './styles';
 import { useTheme } from '../../contexts/ThemeContext';
 import { TrendingUp, Users, DollarSign, Activity, Calendar, Clock, MoreVertical, Heart, MessageCircle, Share2, Bookmark } from 'lucide-react';
 

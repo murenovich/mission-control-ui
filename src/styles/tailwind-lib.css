@@ -1,0 +1,10 @@
+@import 'tailwindcss' source(none);
+@source '../lib/**/*.{js,ts,jsx,tsx}';
+@source '../app/components/Header.tsx';
+@source '../app/components/IconNavBar.tsx';
+@source '../app/components/RightSidebar.tsx';
+@source '../app/components/Sidebar.tsx';
+@source '../app/components/projects/BoardView.tsx';
+@source '../app/components/projects/ProjectModal.tsx';
+@source '../app/components/projects/TableView.tsx';
+@source '../app/components/projects/TimelineView.tsx';

@@ -74,6 +74,13 @@ export function App() {
 }
 ```
 
+## Entry Points
+
+- `mission-control-ui` exports the stable root library surface and bundled styles integration.
+- `mission-control-ui/shell` exports providers, shell utilities, and `MissionControlShell`.
+- `mission-control-ui/screens` exports the reusable route-level screens and their types.
+- `mission-control-ui/demo` exports demo fixtures for local previews and examples.
+
 ## Major Reusable Screens
 
 - `HealthOverviewScreen`

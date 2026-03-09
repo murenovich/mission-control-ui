@@ -1,3 +1,4 @@
+import './styles';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Palette, Droplet, Type, Square } from 'lucide-react';
 

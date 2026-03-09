@@ -400,6 +400,11 @@ export function NewsfeedScreen({
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => toggleBookmark(article.id)}
+                        aria-label={
+                          article.isBookmarked
+                            ? `Remove bookmark for ${article.title}`
+                            : `Bookmark ${article.title}`
+                        }
                         className={`p-2 rounded-lg smooth-transition ${
                           article.isBookmarked
                             ? isDarkMode
@@ -505,6 +510,11 @@ export function NewsfeedScreen({
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => toggleBookmark(article.id)}
+                      aria-label={
+                        article.isBookmarked
+                          ? `Remove bookmark for ${article.title}`
+                          : `Bookmark ${article.title}`
+                      }
                       className={`p-1.5 rounded-lg smooth-transition ${
                         article.isBookmarked
                           ? isDarkMode
@@ -604,6 +614,11 @@ export function NewsfeedScreen({
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => toggleBookmark(article.id)}
+                      aria-label={
+                        article.isBookmarked
+                          ? `Remove bookmark for ${article.title}`
+                          : `Bookmark ${article.title}`
+                      }
                       className={`p-2 rounded-lg smooth-transition ${
                         article.isBookmarked
                           ? isDarkMode
