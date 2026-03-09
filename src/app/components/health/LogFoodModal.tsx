@@ -35,13 +35,28 @@ export function LogFoodModal({ isOpen, onClose }: LogFoodModalProps) {
 
   if (!isOpen) return null;
 
-  const getMealColor = (meal: string) => {
+  const getMealButtonClassName = (meal: MealType, isSelected: boolean) => {
     switch (meal) {
-      case 'breakfast': return 'border-orange-500/30 bg-orange-500/20 text-orange-400';
-      case 'lunch': return 'border-cyan-500/30 bg-cyan-500/20 text-cyan-400';
-      case 'dinner': return 'border-purple-500/30 bg-purple-500/20 text-purple-400';
-      case 'snack': return 'border-green-500/30 bg-green-500/20 text-green-400';
-      default: return 'border-white/10 bg-white/5 text-white/60';
+      case 'breakfast':
+        return isSelected
+          ? 'border-orange-500/40 bg-orange-500/25 text-orange-300 shadow-[0_0_0_1px_rgba(249,115,22,0.15)]'
+          : 'border-orange-500/20 bg-orange-500/10 text-orange-300 hover:bg-orange-500/18';
+      case 'lunch':
+        return isSelected
+          ? 'border-cyan-500/40 bg-cyan-500/25 text-cyan-300 shadow-[0_0_0_1px_rgba(6,182,212,0.15)]'
+          : 'border-cyan-500/20 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/18';
+      case 'dinner':
+        return isSelected
+          ? 'border-purple-500/40 bg-purple-500/25 text-purple-300 shadow-[0_0_0_1px_rgba(168,85,247,0.15)]'
+          : 'border-purple-500/20 bg-purple-500/10 text-purple-300 hover:bg-purple-500/18';
+      case 'snack':
+        return isSelected
+          ? 'border-green-500/40 bg-green-500/25 text-green-300 shadow-[0_0_0_1px_rgba(34,197,94,0.15)]'
+          : 'border-green-500/20 bg-green-500/10 text-green-300 hover:bg-green-500/18';
+      default:
+        return isDarkMode
+          ? 'border-white/10 bg-white/5 text-white/60 hover:bg-white/10'
+          : 'border-black/10 bg-black/5 text-black/60 hover:bg-black/10';
     }
   };
 
@@ -66,8 +81,8 @@ export function LogFoodModal({ isOpen, onClose }: LogFoodModalProps) {
             onClick={onClose}
             className={`p-2 rounded-lg smooth-transition ${
               isDarkMode
-                ? 'hover:bg-white/10 text-white/60 hover:text-white/90'
-                : 'hover:bg-black/10 text-black/60 hover:text-black/90'
+                ? 'bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 hover:text-rose-200 border border-rose-500/20'
+                : 'bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 hover:text-rose-700 border border-rose-500/20'
             }`}
           >
             <X className="w-5 h-5" />
@@ -87,11 +102,7 @@ export function LogFoodModal({ isOpen, onClose }: LogFoodModalProps) {
                   key={meal}
                   onClick={() => setMealType(meal)}
                   className={`px-4 py-3 rounded-lg text-sm font-medium smooth-transition border capitalize ${
-                    mealType === meal
-                      ? getMealColor(meal)
-                      : isDarkMode
-                      ? 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10'
-                      : 'bg-black/5 border-black/10 text-black/70 hover:bg-black/10'
+                    getMealButtonClassName(meal, mealType === meal)
                   }`}
                 >
                   {meal}
@@ -248,8 +259,8 @@ export function LogFoodModal({ isOpen, onClose }: LogFoodModalProps) {
             onClick={onClose}
             className={`px-5 py-2.5 rounded-lg text-sm font-medium smooth-transition ${
               isDarkMode
-                ? 'bg-white/5 text-white/70 hover:bg-white/10'
-                : 'bg-black/5 text-black/70 hover:bg-black/10'
+                ? 'bg-rose-500/10 text-rose-300 hover:bg-rose-500/20 border border-rose-500/20'
+                : 'bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 border border-rose-500/20'
             }`}
           >
             Cancel

@@ -239,7 +239,7 @@ export function Sleep() {
         <h2 className={`text-lg font-semibold mb-6 ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>
           Sleep Quality Trend
         </h2>
-        <div className="h-48 relative">
+        <div className="h-48 relative pl-10">
           <svg className="w-full h-full" viewBox="0 0 700 200" preserveAspectRatio="none">
             {/* Grid lines */}
             {[0, 25, 50, 75, 100].map((percent) => (
@@ -301,15 +301,15 @@ export function Sleep() {
           </svg>
           
           {/* Y-axis labels */}
-          <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs" style={{ marginLeft: '-30px' }}>
+          <div className="absolute left-0 top-0 bottom-0 flex w-8 flex-col justify-between text-xs">
             {[100, 75, 50, 25, 0].map((val) => (
-              <span key={val} className={isDarkMode ? 'text-white/40' : 'text-black/40'}>{val}%</span>
+              <span key={val} className={`text-right ${isDarkMode ? 'text-white/40' : 'text-black/40'}`}>{val}%</span>
             ))}
           </div>
         </div>
         
         {/* X-axis labels */}
-        <div className="flex justify-between mt-2">
+        <div className="flex justify-between mt-2 pl-10">
           {weekData.map((d, i) => (
             <span key={i} className={`text-xs ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>
               {d.day}
