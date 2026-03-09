@@ -14,6 +14,8 @@ interface Goal {
   status: 'active' | 'completed' | 'paused';
 }
 
+type GoalCategory = Goal['category'];
+
 const categoryColors = {
   health: { bg: 'bg-green-500/20', text: 'text-green-400', border: 'border-green-500/30' },
   career: { bg: 'bg-purple-500/20', text: 'text-purple-400', border: 'border-purple-500/30' },
@@ -467,7 +469,9 @@ export function Goals() {
                 </label>
                 <select
                   value={newGoal.category}
-                  onChange={(e) => setNewGoal({ ...newGoal, category: e.target.value as any })}
+                  onChange={(e) =>
+                    setNewGoal({ ...newGoal, category: e.target.value as GoalCategory })
+                  }
                   className={`w-full px-4 py-2.5 rounded-lg border smooth-transition text-sm ${
                     isDarkMode
                       ? 'bg-white/5 border-white/10 text-white/90 focus:border-cyan-400/50'

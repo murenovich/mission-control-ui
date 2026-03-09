@@ -4,61 +4,13 @@ import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { RightSidebar } from './components/RightSidebar';
 import { useTheme } from './contexts/ThemeContext';
+import { getActiveSectionFromPath, getCurrentPageFromPath } from '../lib/navigation';
 
 export function Layout() {
   const { isDarkMode } = useTheme();
   const location = useLocation();
-
-  // Determine active section based on current path
-  const activeSection: 'home' | 'health' | 'projects' | 'systems' | 'messages' | 'newsfeed' | 'components' = location.pathname.startsWith('/health')
-    ? 'health'
-    : location.pathname.startsWith('/projects')
-    ? 'projects'
-    : location.pathname.startsWith('/systems')
-    ? 'systems'
-    : location.pathname.startsWith('/messages')
-    ? 'messages'
-    : location.pathname.startsWith('/newsfeed')
-    ? 'newsfeed'
-    : location.pathname.startsWith('/components')
-    ? 'components'
-    : 'home';
-
-  // Map current path to page identifier for sidebar highlighting
-  const getCurrentPage = (): string => {
-    const path = location.pathname;
-    
-    if (path === '/' || path === '/dashboard') return 'dashboard';
-    if (path === '/analytics') return 'analytics';
-    if (path === '/goals') return 'goals';
-    if (path === '/calendar') return 'calendar';
-    if (path === '/tasks') return 'tasks';
-    if (path.startsWith('/mind')) return 'mind';
-    if (path === '/newsfeed') return 'newsfeed';
-    if (path.startsWith('/projects/overview')) return 'projects-overview';
-    if (path.startsWith('/projects/active')) return 'projects-active';
-    if (path.startsWith('/projects/archived')) return 'projects-archived';
-    if (path.startsWith('/projects/all-tasks')) return 'projects-all-tasks';
-    if (path.startsWith('/projects/my-tasks')) return 'projects-my-tasks';
-    if (path.startsWith('/systems/overview')) return 'systems-overview';
-    if (path.startsWith('/systems/network-status')) return 'systems-network';
-    if (path.startsWith('/systems/services-status')) return 'systems-services';
-    if (path.startsWith('/systems/alerts-logs')) return 'systems-alerts';
-    if (path.startsWith('/systems/troubleshooting')) return 'systems-troubleshooting';
-    if (path.startsWith('/systems/network-diagram')) return 'systems-diagram';
-    if (path === '/settings') return 'settings';
-    if (path.startsWith('/health/overview')) return 'health-overview';
-    if (path.startsWith('/health/nutrition')) return 'health-nutrition';
-    if (path.startsWith('/health/sleep')) return 'health-sleep';
-    if (path.startsWith('/health/vitals')) return 'health-vitals';
-    if (path.startsWith('/health/mental')) return 'health-mental';
-    if (path === '/messages') return 'messages-overview';
-    if (path.startsWith('/messages/discord')) return 'messages-discord';
-    if (path.startsWith('/messages/telegram')) return 'messages-telegram';
-    if (path.startsWith('/messages/slack')) return 'messages-slack';
-    
-    return 'dashboard';
-  };
+  const activeSection = getActiveSectionFromPath(location.pathname);
+  const currentPage = getCurrentPageFromPath(location.pathname);
 
   return (
     <div 
@@ -69,7 +21,7 @@ export function Layout() {
       <IconNavBar activeSection={activeSection} className="mx-4" />
       
       {/* Secondary sidebar */}
-      <Sidebar mode={activeSection} currentPage={getCurrentPage()} />
+      <Sidebar mode={activeSection} currentPage={currentPage} />
 
       {/* Main content area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">

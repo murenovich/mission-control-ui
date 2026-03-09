@@ -7,13 +7,16 @@ interface LogWorkoutModalProps {
   onClose: () => void;
 }
 
+type WorkoutType = 'strength' | 'cardio' | 'flexibility' | 'sports';
+type WorkoutIntensity = 'low' | 'medium' | 'high';
+
 export function LogWorkoutModal({ isOpen, onClose }: LogWorkoutModalProps) {
   const { isDarkMode } = useTheme();
-  const [workoutType, setWorkoutType] = useState<'strength' | 'cardio' | 'flexibility' | 'sports'>('strength');
+  const [workoutType, setWorkoutType] = useState<WorkoutType>('strength');
   const [workoutName, setWorkoutName] = useState('');
   const [duration, setDuration] = useState('');
   const [calories, setCalories] = useState('');
-  const [intensity, setIntensity] = useState<'low' | 'medium' | 'high'>('medium');
+  const [intensity, setIntensity] = useState<WorkoutIntensity>('medium');
   const [notes, setNotes] = useState('');
 
   const handleSubmit = () => {
@@ -29,14 +32,14 @@ export function LogWorkoutModal({ isOpen, onClose }: LogWorkoutModalProps) {
 
   if (!isOpen) return null;
 
-  const workoutTypes = [
+  const workoutTypes: Array<{ value: WorkoutType; label: string; icon: string }> = [
     { value: 'strength', label: 'Strength', icon: '💪' },
     { value: 'cardio', label: 'Cardio', icon: '🏃' },
     { value: 'flexibility', label: 'Flexibility', icon: '🧘' },
     { value: 'sports', label: 'Sports', icon: '⚽' },
   ];
 
-  const intensityLevels = [
+  const intensityLevels: Array<{ value: WorkoutIntensity; label: string; color: string }> = [
     { value: 'low', label: 'Low', color: 'green' },
     { value: 'medium', label: 'Medium', color: 'yellow' },
     { value: 'high', label: 'High', color: 'red' },
@@ -91,7 +94,7 @@ export function LogWorkoutModal({ isOpen, onClose }: LogWorkoutModalProps) {
               {workoutTypes.map((type) => (
                 <button
                   key={type.value}
-                  onClick={() => setWorkoutType(type.value as any)}
+                  onClick={() => setWorkoutType(type.value)}
                   className={`flex flex-col items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium smooth-transition border ${
                     workoutType === type.value
                       ? isDarkMode
@@ -182,7 +185,7 @@ export function LogWorkoutModal({ isOpen, onClose }: LogWorkoutModalProps) {
               {intensityLevels.map((level) => (
                 <button
                   key={level.value}
-                  onClick={() => setIntensity(level.value as any)}
+                  onClick={() => setIntensity(level.value)}
                   className={`px-4 py-3 rounded-lg text-sm font-medium smooth-transition border ${
                     intensity === level.value
                       ? getIntensityColor(level.value)

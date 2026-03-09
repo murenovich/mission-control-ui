@@ -13,6 +13,11 @@ interface Task {
   tags: string[];
 }
 
+type TaskStatusFilter = 'all' | Task['status'];
+type TaskPriorityFilter = 'all' | Task['priority'];
+type TaskCategory = Task['category'];
+type TaskPriority = Task['priority'];
+
 const priorityColors = {
   low: { bg: 'bg-green-500/20', text: 'text-green-400', border: 'border-green-500/30' },
   medium: { bg: 'bg-cyan-500/20', text: 'text-cyan-400', border: 'border-cyan-500/30' },
@@ -92,8 +97,8 @@ export function Tasks() {
     },
   ]);
 
-  const [filterStatus, setFilterStatus] = useState<'all' | 'todo' | 'in-progress' | 'completed'>('all');
-  const [filterPriority, setFilterPriority] = useState<'all' | 'low' | 'medium' | 'high' | 'urgent'>('all');
+  const [filterStatus, setFilterStatus] = useState<TaskStatusFilter>('all');
+  const [filterPriority, setFilterPriority] = useState<TaskPriorityFilter>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   
@@ -397,7 +402,7 @@ export function Tasks() {
             <Filter className={`w-4 h-4 ${isDarkMode ? 'text-white/60' : 'text-black/60'}`} />
             <select
               value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value as any)}
+              onChange={(e) => setFilterStatus(e.target.value as TaskStatusFilter)}
               className={`px-3 py-2 rounded-lg border smooth-transition text-sm ${
                 isDarkMode
                   ? 'bg-white/5 border-white/10 text-white/90'
@@ -415,7 +420,7 @@ export function Tasks() {
           <div>
             <select
               value={filterPriority}
-              onChange={(e) => setFilterPriority(e.target.value as any)}
+              onChange={(e) => setFilterPriority(e.target.value as TaskPriorityFilter)}
               className={`px-3 py-2 rounded-lg border smooth-transition text-sm ${
                 isDarkMode
                   ? 'bg-white/5 border-white/10 text-white/90'
@@ -562,7 +567,9 @@ export function Tasks() {
                   </label>
                   <select
                     value={newTask.priority}
-                    onChange={(e) => setNewTask({ ...newTask, priority: e.target.value as any })}
+                    onChange={(e) =>
+                      setNewTask({ ...newTask, priority: e.target.value as TaskPriority })
+                    }
                     className={`px-3 py-2 rounded-lg border smooth-transition text-sm ${
                       isDarkMode
                         ? 'bg-white/5 border-white/10 text-white/90'
@@ -586,7 +593,9 @@ export function Tasks() {
                   </label>
                   <select
                     value={newTask.category}
-                    onChange={(e) => setNewTask({ ...newTask, category: e.target.value as any })}
+                    onChange={(e) =>
+                      setNewTask({ ...newTask, category: e.target.value as TaskCategory })
+                    }
                     className={`px-3 py-2 rounded-lg border smooth-transition text-sm ${
                       isDarkMode
                         ? 'bg-white/5 border-white/10 text-white/90'

@@ -1,8 +1,13 @@
 import { Home, BarChart3, Target, Calendar, CheckSquare, Brain, Settings, Menu, X, Activity, Dumbbell, Apple, Moon as MoonIcon, Heart, Smile, ChevronLeft, ChevronRight, FolderKanban, Archive, ListTodo, User, Server, Wifi, Zap, AlertTriangle, Wrench, Network, MessageSquare, Hash, Send, Newspaper, Rss, Bookmark, TrendingUp, Globe, Layout, MousePointer, Square, FileText, Bell, BarChart2, Palette } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useSidebar } from '../contexts/SidebarContext';
 import { Link, useLocation } from 'react-router';
+import {
+  getDefaultCurrentPage,
+  matchCurrentPageFromPath,
+  type ShellSection,
+} from '../../lib/navigation';
 
 interface NavItem {
   id: string;
@@ -73,16 +78,17 @@ const componentsNavItems: NavItem[] = [
 ];
 
 interface SidebarProps {
-  mode: 'home' | 'health' | 'projects' | 'systems' | 'messages' | 'newsfeed' | 'components';
-  currentPage: string;
+  mode: ShellSection;
+  currentPage?: string;
 }
 
 export function Sidebar({ mode, currentPage }: SidebarProps) {
   const location = useLocation();
-  const [activeItem, setActiveItem] = useState(currentPage);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { isDarkMode } = useTheme();
   const { leftSidebarExpanded, toggleLeftSidebar } = useSidebar();
+  const activeItem =
+    matchCurrentPageFromPath(location.pathname) ?? currentPage ?? getDefaultCurrentPage(mode);
 
   const navItems = mode === 'health' 
     ? healthNavItems 
@@ -127,7 +133,6 @@ export function Sidebar({ mode, currentPage }: SidebarProps) {
     : 'Mission Control';
 
   const handleItemClick = (item: NavItem) => {
-    setActiveItem(item.id);
     if (item.page) {
       // onPageChange(item.page);
     }
@@ -245,6 +250,7 @@ export function Sidebar({ mode, currentPage }: SidebarProps) {
                 key={item.id}
                 to={item.page || '/'}
                 onClick={() => handleItemClick(item)}
+                aria-current={isActive ? 'page' : undefined}
                 className={`
                   w-full flex items-center gap-3 rounded-lg
                   smooth-transition group relative
@@ -305,10 +311,11 @@ export function Sidebar({ mode, currentPage }: SidebarProps) {
           {/* Settings */}
           <Link 
             to="/settings"
+            aria-current={activeItem === 'settings' ? 'page' : undefined}
             className={`w-full flex items-center gap-3 rounded-lg smooth-transition ${
               leftSidebarExpanded ? 'px-4 py-3' : 'px-2 py-3 justify-center'
             } ${
-              currentPage === 'settings'
+              activeItem === 'settings'
                 ? isDarkMode
                   ? 'bg-cyan-500/20 text-cyan-400'
                   : 'bg-cyan-500/20 text-cyan-600'

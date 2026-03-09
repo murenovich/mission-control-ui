@@ -7,9 +7,12 @@ interface LogFoodModalProps {
   onClose: () => void;
 }
 
+type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
+const MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack'];
+
 export function LogFoodModal({ isOpen, onClose }: LogFoodModalProps) {
   const { isDarkMode } = useTheme();
-  const [mealType, setMealType] = useState<'breakfast' | 'lunch' | 'dinner' | 'snack'>('breakfast');
+  const [mealType, setMealType] = useState<MealType>('breakfast');
   const [foodName, setFoodName] = useState('');
   const [calories, setCalories] = useState('');
   const [protein, setProtein] = useState('');
@@ -79,10 +82,10 @@ export function LogFoodModal({ isOpen, onClose }: LogFoodModalProps) {
               Meal Type *
             </label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {['breakfast', 'lunch', 'dinner', 'snack'].map((meal) => (
+              {MEAL_TYPES.map((meal) => (
                 <button
                   key={meal}
-                  onClick={() => setMealType(meal as any)}
+                  onClick={() => setMealType(meal)}
                   className={`px-4 py-3 rounded-lg text-sm font-medium smooth-transition border capitalize ${
                     mealType === meal
                       ? getMealColor(meal)

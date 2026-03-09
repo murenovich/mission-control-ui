@@ -16,9 +16,12 @@ interface FoodEntry {
   sugar: number;
 }
 
+type NutritionView = 'overview' | 'journal' | 'water';
+const NUTRITION_VIEWS: NutritionView[] = ['overview', 'journal', 'water'];
+
 export function Nutrition() {
   const { isDarkMode } = useTheme();
-  const [activeView, setActiveView] = useState<'overview' | 'journal' | 'water'>('overview');
+  const [activeView, setActiveView] = useState<NutritionView>('overview');
   const [sortField, setSortField] = useState<keyof FoodEntry>('time');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [searchTerm, setSearchTerm] = useState('');
@@ -136,10 +139,10 @@ export function Nutrition() {
 
       {/* View Tabs */}
       <div className="flex gap-2">
-        {['overview', 'journal', 'water'].map((view) => (
+        {NUTRITION_VIEWS.map((view) => (
           <button
             key={view}
-            onClick={() => setActiveView(view as any)}
+            onClick={() => setActiveView(view)}
             className={`px-4 py-2 rounded-lg smooth-transition text-sm font-medium capitalize ${
               activeView === view
                 ? isDarkMode

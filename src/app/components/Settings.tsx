@@ -2,9 +2,11 @@ import { Settings as SettingsIcon, User, Bell, Lock, Palette, Globe, Sliders, Sh
 import { useTheme } from '../contexts/ThemeContext';
 import { useState } from 'react';
 
+type SettingsTab = 'profile' | 'appearance' | 'notifications' | 'security' | 'preferences';
+
 export function Settings() {
   const { isDarkMode, toggleTheme } = useTheme();
-  const [activeTab, setActiveTab] = useState<'profile' | 'appearance' | 'notifications' | 'security' | 'preferences'>('profile');
+  const [activeTab, setActiveTab] = useState<SettingsTab>('profile');
   
   const [profileSettings, setProfileSettings] = useState({
     name: 'Alex Johnson',
@@ -43,7 +45,7 @@ export function Settings() {
     autoSave: true,
   });
 
-  const tabs = [
+  const tabs: Array<{ id: SettingsTab; label: string; icon: typeof User }> = [
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'appearance', label: 'Appearance', icon: Palette },
     { id: 'notifications', label: 'Notifications', icon: Bell },
@@ -600,7 +602,7 @@ export function Settings() {
             {tabs.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
-                onClick={() => setActiveTab(id as any)}
+                onClick={() => setActiveTab(id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg smooth-transition text-left ${
                   activeTab === id
                     ? isDarkMode

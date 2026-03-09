@@ -14,6 +14,18 @@
       "types": "./dist/lib/index.d.ts",
       "import": "./dist/lib/index.js"
     },
+    "./shell": {
+      "types": "./dist/lib/shell.d.ts",
+      "import": "./dist/lib/shell.js"
+    },
+    "./screens": {
+      "types": "./dist/lib/screens.d.ts",
+      "import": "./dist/lib/screens.js"
+    },
+    "./demo": {
+      "types": "./dist/lib/demo.d.ts",
+      "import": "./dist/lib/demo.js"
+    },
     "./styles.css": "./dist/lib/styles.css"
   },
   "scripts": {
@@ -22,6 +34,7 @@
     "build:lib": "LIB_BUILD=1 vite build",
     "dev": "vite",
     "pack:lib": "mkdir -p dist/package && npm_config_cache=.npm-cache npm run build:lib && npm_config_cache=.npm-cache npm pack --pack-destination dist/package",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -81,15 +94,22 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.1.12",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^25.3.5",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "4.7.0",
+    "jsdom": "^28.1.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-router": "7.13.0",
     "tailwindcss": "4.1.12",
     "typescript": "^5.9.3",
     "vite": "6.3.5",
-    "vite-plugin-dts": "^4.5.4"
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^4.0.18"
   },
   "peerDependencies": {
     "react": ">=18.3.1",

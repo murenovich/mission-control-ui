@@ -38,9 +38,14 @@ export default defineConfig({
         outDir: 'dist/lib',
         emptyOutDir: true,
         lib: {
-          entry: path.resolve(__dirname, './src/lib/index.ts'),
+          entry: {
+            index: path.resolve(__dirname, './src/lib/index.ts'),
+            shell: path.resolve(__dirname, './src/lib/shell.ts'),
+            screens: path.resolve(__dirname, './src/lib/screens.ts'),
+            demo: path.resolve(__dirname, './src/lib/demo.ts'),
+          },
           formats: ['es'],
-          fileName: 'index',
+          fileName: (_format, entryName) => `${entryName}.js`,
           cssFileName: 'styles',
         },
         rollupOptions: {

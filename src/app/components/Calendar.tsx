@@ -26,6 +26,23 @@ interface Event {
   calendarColor: string;
 }
 
+type EventType = Event['type'];
+type MeetingPlatform = NonNullable<Event['meetingPlatform']>;
+type CalendarSource = Event['calendarSource'];
+
+interface EventDraft {
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  type: EventType;
+  location: string;
+  isVirtual: boolean;
+  meetingPlatform: MeetingPlatform;
+  meetingLink: string;
+  calendarSource: CalendarSource;
+}
+
 const eventTypeColors = {
   meeting: { bg: 'bg-purple-500/20', text: 'text-purple-400', border: 'border-purple-500/30' },
   personal: { bg: 'bg-cyan-500/20', text: 'text-cyan-400', border: 'border-cyan-500/30' },
@@ -68,17 +85,17 @@ export function Calendar() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [view, setView] = useState<'month' | 'week' | 'day'>('month');
   const [showNewEventModal, setShowNewEventModal] = useState(false);
-  const [newEvent, setNewEvent] = useState({
+  const [newEvent, setNewEvent] = useState<EventDraft>({
     title: '',
     date: new Date().toISOString().split('T')[0],
     startTime: '09:00',
     endTime: '10:00',
-    type: 'meeting' as 'meeting' | 'personal' | 'work' | 'health',
+    type: 'meeting',
     location: '',
     isVirtual: false,
-    meetingPlatform: 'zoom' as 'zoom' | 'meet' | 'teams',
+    meetingPlatform: 'zoom',
     meetingLink: '',
-    calendarSource: 'Personal' as 'Google Calendar' | 'Outlook' | 'Apple Calendar' | 'Personal',
+    calendarSource: 'Personal',
   });
 
   const [events, setEvents] = useState<Event[]>([
@@ -959,7 +976,7 @@ export function Calendar() {
                   </label>
                   <select
                     value={newEvent.type}
-                    onChange={(e) => setNewEvent({ ...newEvent, type: e.target.value as any })}
+                    onChange={(e) => setNewEvent({ ...newEvent, type: e.target.value as EventType })}
                     className={`w-full px-4 py-2.5 rounded-lg border smooth-transition text-sm ${
                       isDarkMode
                         ? 'bg-white/5 border-white/10 text-white/90 focus:border-cyan-400/50'
@@ -1014,7 +1031,9 @@ export function Calendar() {
                 </label>
                 <select
                   value={newEvent.calendarSource}
-                  onChange={(e) => setNewEvent({ ...newEvent, calendarSource: e.target.value as any })}
+                  onChange={(e) =>
+                    setNewEvent({ ...newEvent, calendarSource: e.target.value as CalendarSource })
+                  }
                   className={`w-full px-4 py-2.5 rounded-lg border smooth-transition text-sm ${
                     isDarkMode
                       ? 'bg-white/5 border-white/10 text-white/90 focus:border-cyan-400/50'
@@ -1067,7 +1086,9 @@ export function Calendar() {
                     </label>
                     <select
                       value={newEvent.meetingPlatform}
-                      onChange={(e) => setNewEvent({ ...newEvent, meetingPlatform: e.target.value as any })}
+                      onChange={(e) =>
+                        setNewEvent({ ...newEvent, meetingPlatform: e.target.value as MeetingPlatform })
+                      }
                       className={`w-full px-4 py-2.5 rounded-lg border smooth-transition text-sm ${
                         isDarkMode
                           ? 'bg-white/5 border-white/10 text-white/90 focus:border-cyan-400/50'
