@@ -1,10 +1,15 @@
 import { Edit, Plus, MoreVertical } from 'lucide-react';
+import { useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
-import type { ProjectRecord } from '../../../lib/screens/projects/projectModels';
+import type {
+  ProjectRecord,
+  ProjectStatus,
+} from '../../../lib/screens/projects/projectModels';
 
 interface BoardViewProps {
   projects: ProjectRecord[];
   onEdit: (project: ProjectRecord) => void;
+  onStatusChange?: (project: ProjectRecord, nextStatus: ProjectStatus) => void;
 }
 
 const columns = [
@@ -12,10 +17,12 @@ const columns = [
   { id: 'In Progress', title: 'In Progress', color: 'from-cyan-500 to-cyan-600' },
   { id: 'In Review', title: 'In Review', color: 'from-purple-500 to-purple-600' },
   { id: 'Completed', title: 'Completed', color: 'from-green-500 to-green-600' },
-];
+] as const satisfies ReadonlyArray<{ id: ProjectStatus; title: string; color: string }>;
 
-export function BoardView({ projects, onEdit }: BoardViewProps) {
+export function BoardView({ projects, onEdit, onStatusChange }: BoardViewProps) {
   const { isDarkMode } = useTheme();
+  const [draggedProjectId, setDraggedProjectId] = useState<string | null>(null);
+  const [draggedOverColumn, setDraggedOverColumn] = useState<ProjectStatus | null>(null);
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -30,6 +37,23 @@ export function BoardView({ projects, onEdit }: BoardViewProps) {
     }
   };
 
+  const handleDrop = (nextStatus: ProjectStatus) => {
+    if (!draggedProjectId) {
+      return;
+    }
+
+    const draggedProject = projects.find((project) => project.id === draggedProjectId);
+    if (!draggedProject || draggedProject.status === nextStatus) {
+      setDraggedProjectId(null);
+      setDraggedOverColumn(null);
+      return;
+    }
+
+    onStatusChange?.(draggedProject, nextStatus);
+    setDraggedProjectId(null);
+    setDraggedOverColumn(null);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {columns.map((column) => {
@@ -38,7 +62,30 @@ export function BoardView({ projects, onEdit }: BoardViewProps) {
         return (
           <div
             key={column.id}
-            className={`rounded-xl border p-4 ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-white/30 border-black/10'}`}
+            onDragOver={(event) => {
+              event.preventDefault();
+              if (draggedProjectId) {
+                setDraggedOverColumn(column.id);
+              }
+            }}
+            onDragLeave={() => {
+              if (draggedOverColumn === column.id) {
+                setDraggedOverColumn(null);
+              }
+            }}
+            onDrop={(event) => {
+              event.preventDefault();
+              handleDrop(column.id);
+            }}
+            className={`rounded-xl border p-4 smooth-transition ${
+              draggedOverColumn === column.id
+                ? isDarkMode
+                  ? 'bg-white/10 border-cyan-400/40 shadow-[0_0_0_1px_rgba(34,211,238,0.15)]'
+                  : 'bg-white/50 border-cyan-500/40 shadow-[0_0_0_1px_rgba(6,182,212,0.12)]'
+                : isDarkMode
+                ? 'bg-white/5 border-white/10'
+                : 'bg-white/30 border-black/10'
+            }`}
           >
             {/* Column Header */}
             <div className="flex items-center justify-between mb-4">
@@ -61,11 +108,21 @@ export function BoardView({ projects, onEdit }: BoardViewProps) {
               {columnProjects.map((project) => (
                 <div
                   key={project.id}
+                  draggable
+                  onDragStart={(event) => {
+                    event.dataTransfer.effectAllowed = 'move';
+                    event.dataTransfer.setData('text/plain', project.id);
+                    setDraggedProjectId(project.id);
+                  }}
+                  onDragEnd={() => {
+                    setDraggedProjectId(null);
+                    setDraggedOverColumn(null);
+                  }}
                   className={`p-4 rounded-lg border-l-2 ${getPriorityColor(project.priority)} cursor-pointer smooth-transition ${
                     isDarkMode
                       ? 'bg-white/5 hover:bg-white/10 border-r border-t border-b border-white/10'
                       : 'bg-white/50 hover:bg-white/60 border-r border-t border-b border-black/10'
-                  }`}
+                  } ${draggedProjectId === project.id ? 'opacity-50 scale-[0.98]' : ''}`}
                   onClick={() => onEdit(project)}
                 >
                   {/* Card Header */}

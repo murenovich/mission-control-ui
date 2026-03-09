@@ -21,6 +21,7 @@ import {
   DEMO_PROJECT_WORKSPACES,
   type ProjectFormValues,
   type ProjectRecord,
+  type ProjectStatus,
   type ProjectsViewMode,
   type ProjectWorkspace,
 } from './projects/projectModels';
@@ -41,6 +42,13 @@ export interface ProjectsOverviewScreenProps {
     context: {
       mode: 'create' | 'edit';
       previousProject: ProjectRecord | null;
+    },
+  ) => void;
+  onMoveProject?: (
+    project: ProjectRecord,
+    context: {
+      previousStatus: ProjectStatus;
+      nextStatus: ProjectStatus;
     },
   ) => void;
 }
@@ -65,6 +73,7 @@ export function ProjectsOverviewScreen({
   onCreateProject,
   onEditProject,
   onSaveProject,
+  onMoveProject,
 }: ProjectsOverviewScreenProps) {
   const { isDarkMode } = useTheme();
   const [currentView, setCurrentView] = useState<ProjectsViewMode>(defaultViewMode);
@@ -143,10 +152,42 @@ export function ProjectsOverviewScreen({
     setSelectedProject(null);
   };
 
+  const handleMoveProject = (project: ProjectRecord, nextStatus: ProjectStatus) => {
+    if (project.status === nextStatus) {
+      return;
+    }
+
+    const movedProject: ProjectRecord = { ...project, status: nextStatus };
+
+    if (!projects) {
+      setInternalProjects((previousProjects) =>
+        previousProjects.map((currentProject) =>
+          currentProject.id === project.id ? movedProject : currentProject,
+        ),
+      );
+    }
+
+    onMoveProject?.(movedProject, {
+      previousStatus: project.status,
+      nextStatus,
+    });
+
+    onSaveProject?.(movedProject, {
+      mode: 'edit',
+      previousProject: project,
+    });
+  };
+
   const renderView = () => {
     switch (currentView) {
       case 'board':
-        return <BoardView projects={filteredProjects} onEdit={handleEditProject} />;
+        return (
+          <BoardView
+            projects={filteredProjects}
+            onEdit={handleEditProject}
+            onStatusChange={handleMoveProject}
+          />
+        );
       case 'timeline':
         return <TimelineView projects={filteredProjects} onEdit={handleEditProject} />;
       case 'table':
