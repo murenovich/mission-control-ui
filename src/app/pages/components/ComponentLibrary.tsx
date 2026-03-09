@@ -1,3 +1,4 @@
+import './styles';
 import { useTheme } from '../../contexts/ThemeContext';
 import { Layout, MousePointer, Square, FileText, Bell, BarChart2, Palette, Code, Package } from 'lucide-react';
 import { Link } from 'react-router';

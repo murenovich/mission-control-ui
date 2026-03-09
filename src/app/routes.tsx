@@ -1,296 +1,278 @@
-import { createBrowserRouter, Navigate } from 'react-router';
+import type { ComponentType } from 'react';
+import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
 import { Layout } from './Layout';
-import { DashboardWidgets } from './components/DashboardWidgets';
-import { Analytics } from './components/Analytics';
-import { Goals } from './components/Goals';
-import { Calendar } from './components/Calendar';
-import { Tasks } from './components/Tasks';
-import { Settings } from './components/Settings';
-import { HealthOverview } from './components/health/HealthOverview';
-import { Nutrition } from './components/health/Nutrition';
-import { Sleep } from './components/health/Sleep';
-import { Vitals } from './components/health/Vitals';
-import { MentalHealth } from './components/health/MentalHealth';
-import { Mind } from './components/life/Mind';
-import { ProjectsOverview } from './components/projects/ProjectsOverview';
-import { ActiveProjects } from './components/projects/ActiveProjects';
-import { ArchivedProjects } from './components/projects/ArchivedProjects';
-import { AllTasks } from './components/projects/AllTasks';
-import { MyTasks } from './components/projects/MyTasks';
-import { SystemOverview } from './components/systems/SystemOverview';
-import { NetworkStatus } from './components/systems/NetworkStatus';
-import { ServicesStatus } from './components/systems/ServicesStatus';
-import { AlertsLogs } from './components/systems/AlertsLogs';
-import { Troubleshooting } from './components/systems/Troubleshooting';
-import { NetworkDiagram } from './components/systems/NetworkDiagram';
-import Messages from './pages/Messages';
-import DiscordMessages from './pages/DiscordMessages';
-import TelegramMessages from './pages/TelegramMessages';
-import SlackMessages from './pages/SlackMessages';
-import Newsfeed from './pages/Newsfeed';
-import FeedSources from './pages/newsfeed/FeedSources';
-import SavedArticles from './pages/newsfeed/SavedArticles';
-import Trending from './pages/newsfeed/Trending';
-import Categories from './pages/newsfeed/Categories';
-import ComponentLibrary from './pages/components/ComponentLibrary';
-import ButtonsPage from './pages/components/ButtonsPage';
-import CardsPage from './pages/components/CardsPage';
-import AllComponents from './pages/components/AllComponents';
-import FormsPage from './pages/components/FormsPage';
-import ModalsPage from './pages/components/ModalsPage';
-import FeedbackPage from './pages/components/FeedbackPage';
-import ChartsPage from './pages/components/ChartsPage';
-import LayoutPage from './pages/components/LayoutPage';
-import ThemePage from './pages/components/ThemePage';
+
+function lazyDefault(importer: () => Promise<{ default: ComponentType }>) {
+  return async () => {
+    const module = await importer();
+
+    return { Component: module.default };
+  };
+}
+
+function lazyNamed<TModule extends Record<string, unknown>, TKey extends keyof TModule & string>(
+  importer: () => Promise<TModule>,
+  exportName: TKey,
+) {
+  return async () => {
+    const module = await importer();
+
+    return {
+      Component: module[exportName] as ComponentType,
+    };
+  };
+}
+
+const childRoutes: RouteObject[] = [
+  {
+    index: true,
+    lazy: lazyNamed(() => import('./components/DashboardWidgets'), 'DashboardWidgets'),
+  },
+  {
+    path: 'analytics',
+    lazy: lazyNamed(() => import('./components/Analytics'), 'Analytics'),
+  },
+  {
+    path: 'goals',
+    lazy: lazyNamed(() => import('./components/Goals'), 'Goals'),
+  },
+  {
+    path: 'calendar',
+    lazy: lazyNamed(() => import('./components/Calendar'), 'Calendar'),
+  },
+  {
+    path: 'tasks',
+    lazy: lazyNamed(() => import('./components/Tasks'), 'Tasks'),
+  },
+  {
+    path: 'projects',
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/projects/overview" replace />,
+      },
+      {
+        path: 'overview',
+        lazy: lazyNamed(() => import('./components/projects/ProjectsOverview'), 'ProjectsOverview'),
+      },
+      {
+        path: 'active',
+        lazy: lazyNamed(() => import('./components/projects/ActiveProjects'), 'ActiveProjects'),
+      },
+      {
+        path: 'archived',
+        lazy: lazyNamed(() => import('./components/projects/ArchivedProjects'), 'ArchivedProjects'),
+      },
+      {
+        path: 'all-tasks',
+        lazy: lazyNamed(() => import('./components/projects/AllTasks'), 'AllTasks'),
+      },
+      {
+        path: 'my-tasks',
+        lazy: lazyNamed(() => import('./components/projects/MyTasks'), 'MyTasks'),
+      },
+    ],
+  },
+  {
+    path: 'settings',
+    lazy: lazyNamed(() => import('./components/Settings'), 'Settings'),
+  },
+  {
+    path: 'health',
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/health/overview" replace />,
+      },
+      {
+        path: 'overview',
+        lazy: lazyNamed(() => import('./components/health/HealthOverview'), 'HealthOverview'),
+      },
+      {
+        path: 'nutrition',
+        lazy: lazyNamed(() => import('./components/health/Nutrition'), 'Nutrition'),
+      },
+      {
+        path: 'sleep',
+        lazy: lazyNamed(() => import('./components/health/Sleep'), 'Sleep'),
+      },
+      {
+        path: 'vitals',
+        lazy: lazyNamed(() => import('./components/health/Vitals'), 'Vitals'),
+      },
+      {
+        path: 'mental',
+        lazy: lazyNamed(() => import('./components/health/MentalHealth'), 'MentalHealth'),
+      },
+    ],
+  },
+  {
+    path: 'mind',
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/mind/dashboard" replace />,
+      },
+      {
+        path: 'dashboard',
+        lazy: lazyNamed(() => import('./components/life/Mind'), 'Mind'),
+      },
+      {
+        path: 'learning',
+        lazy: lazyNamed(() => import('./components/life/Mind'), 'Mind'),
+      },
+      {
+        path: 'reading',
+        lazy: lazyNamed(() => import('./components/life/Mind'), 'Mind'),
+      },
+      {
+        path: 'skills',
+        lazy: lazyNamed(() => import('./components/life/Mind'), 'Mind'),
+      },
+      {
+        path: 'ideas',
+        lazy: lazyNamed(() => import('./components/life/Mind'), 'Mind'),
+      },
+      {
+        path: 'focus',
+        lazy: lazyNamed(() => import('./components/life/Mind'), 'Mind'),
+      },
+    ],
+  },
+  {
+    path: 'systems',
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/systems/overview" replace />,
+      },
+      {
+        path: 'overview',
+        lazy: lazyNamed(() => import('./components/systems/SystemOverview'), 'SystemOverview'),
+      },
+      {
+        path: 'network-status',
+        lazy: lazyNamed(() => import('./components/systems/NetworkStatus'), 'NetworkStatus'),
+      },
+      {
+        path: 'services-status',
+        lazy: lazyNamed(() => import('./components/systems/ServicesStatus'), 'ServicesStatus'),
+      },
+      {
+        path: 'alerts-logs',
+        lazy: lazyNamed(() => import('./components/systems/AlertsLogs'), 'AlertsLogs'),
+      },
+      {
+        path: 'troubleshooting',
+        lazy: lazyNamed(() => import('./components/systems/Troubleshooting'), 'Troubleshooting'),
+      },
+      {
+        path: 'network-diagram',
+        lazy: lazyNamed(() => import('./components/systems/NetworkDiagram'), 'NetworkDiagram'),
+      },
+    ],
+  },
+  {
+    path: 'messages',
+    children: [
+      {
+        index: true,
+        lazy: lazyDefault(() => import('./pages/Messages')),
+      },
+      {
+        path: 'discord',
+        lazy: lazyDefault(() => import('./pages/DiscordMessages')),
+      },
+      {
+        path: 'telegram',
+        lazy: lazyDefault(() => import('./pages/TelegramMessages')),
+      },
+      {
+        path: 'slack',
+        lazy: lazyDefault(() => import('./pages/SlackMessages')),
+      },
+    ],
+  },
+  {
+    path: 'newsfeed',
+    children: [
+      {
+        index: true,
+        lazy: lazyDefault(() => import('./pages/Newsfeed')),
+      },
+      {
+        path: 'sources',
+        lazy: lazyDefault(() => import('./pages/newsfeed/FeedSources')),
+      },
+      {
+        path: 'saved',
+        lazy: lazyDefault(() => import('./pages/newsfeed/SavedArticles')),
+      },
+      {
+        path: 'trending',
+        lazy: lazyDefault(() => import('./pages/newsfeed/Trending')),
+      },
+      {
+        path: 'categories',
+        lazy: lazyDefault(() => import('./pages/newsfeed/Categories')),
+      },
+    ],
+  },
+  {
+    path: 'components',
+    children: [
+      {
+        index: true,
+        lazy: lazyDefault(() => import('./pages/components/ComponentLibrary')),
+      },
+      {
+        path: 'buttons',
+        lazy: lazyDefault(() => import('./pages/components/ButtonsPage')),
+      },
+      {
+        path: 'cards',
+        lazy: lazyDefault(() => import('./pages/components/CardsPage')),
+      },
+      {
+        path: 'all',
+        lazy: lazyDefault(() => import('./pages/components/AllComponents')),
+      },
+      {
+        path: 'forms',
+        lazy: lazyDefault(() => import('./pages/components/FormsPage')),
+      },
+      {
+        path: 'modals',
+        lazy: lazyDefault(() => import('./pages/components/ModalsPage')),
+      },
+      {
+        path: 'feedback',
+        lazy: lazyDefault(() => import('./pages/components/FeedbackPage')),
+      },
+      {
+        path: 'charts',
+        lazy: lazyDefault(() => import('./pages/components/ChartsPage')),
+      },
+      {
+        path: 'layout',
+        lazy: lazyDefault(() => import('./pages/components/LayoutPage')),
+      },
+      {
+        path: 'theme',
+        lazy: lazyDefault(() => import('./pages/components/ThemePage')),
+      },
+    ],
+  },
+  {
+    path: '*',
+    element: <Navigate to="/" replace />,
+  },
+];
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <DashboardWidgets />,
-      },
-      {
-        path: 'analytics',
-        element: <Analytics />,
-      },
-      {
-        path: 'goals',
-        element: <Goals />,
-      },
-      {
-        path: 'calendar',
-        element: <Calendar />,
-      },
-      {
-        path: 'tasks',
-        element: <Tasks />,
-      },
-      {
-        path: 'projects',
-        children: [
-          {
-            index: true,
-            element: <Navigate to="/projects/overview" replace />,
-          },
-          {
-            path: 'overview',
-            element: <ProjectsOverview />,
-          },
-          {
-            path: 'active',
-            element: <ActiveProjects />,
-          },
-          {
-            path: 'archived',
-            element: <ArchivedProjects />,
-          },
-          {
-            path: 'all-tasks',
-            element: <AllTasks />,
-          },
-          {
-            path: 'my-tasks',
-            element: <MyTasks />,
-          },
-        ],
-      },
-      {
-        path: 'settings',
-        element: <Settings />,
-      },
-      {
-        path: 'health',
-        children: [
-          {
-            index: true,
-            element: <Navigate to="/health/overview" replace />,
-          },
-          {
-            path: 'overview',
-            element: <HealthOverview />,
-          },
-          {
-            path: 'nutrition',
-            element: <Nutrition />,
-          },
-          {
-            path: 'sleep',
-            element: <Sleep />,
-          },
-          {
-            path: 'vitals',
-            element: <Vitals />,
-          },
-          {
-            path: 'mental',
-            element: <MentalHealth />,
-          },
-        ],
-      },
-      {
-        path: 'mind',
-        children: [
-          {
-            index: true,
-            element: <Navigate to="/mind/dashboard" replace />,
-          },
-          {
-            path: 'dashboard',
-            element: <Mind />,
-          },
-          {
-            path: 'learning',
-            element: <Mind />,
-          },
-          {
-            path: 'reading',
-            element: <Mind />,
-          },
-          {
-            path: 'skills',
-            element: <Mind />,
-          },
-          {
-            path: 'ideas',
-            element: <Mind />,
-          },
-          {
-            path: 'focus',
-            element: <Mind />,
-          },
-        ],
-      },
-      {
-        path: 'systems',
-        children: [
-          {
-            index: true,
-            element: <Navigate to="/systems/overview" replace />,
-          },
-          {
-            path: 'overview',
-            element: <SystemOverview />,
-          },
-          {
-            path: 'network-status',
-            element: <NetworkStatus />,
-          },
-          {
-            path: 'services-status',
-            element: <ServicesStatus />,
-          },
-          {
-            path: 'alerts-logs',
-            element: <AlertsLogs />,
-          },
-          {
-            path: 'troubleshooting',
-            element: <Troubleshooting />,
-          },
-          {
-            path: 'network-diagram',
-            element: <NetworkDiagram />,
-          },
-        ],
-      },
-      {
-        path: 'messages',
-        children: [
-          {
-            index: true,
-            element: <Messages />,
-          },
-          {
-            path: 'discord',
-            element: <DiscordMessages />,
-          },
-          {
-            path: 'telegram',
-            element: <TelegramMessages />,
-          },
-          {
-            path: 'slack',
-            element: <SlackMessages />,
-          },
-        ],
-      },
-      {
-        path: 'newsfeed',
-        children: [
-          {
-            index: true,
-            element: <Newsfeed />,
-          },
-          {
-            path: 'sources',
-            element: <FeedSources />,
-          },
-          {
-            path: 'saved',
-            element: <SavedArticles />,
-          },
-          {
-            path: 'trending',
-            element: <Trending />,
-          },
-          {
-            path: 'categories',
-            element: <Categories />,
-          },
-        ],
-      },
-      {
-        path: 'components',
-        children: [
-          {
-            index: true,
-            element: <ComponentLibrary />,
-          },
-          {
-            path: 'buttons',
-            element: <ButtonsPage />,
-          },
-          {
-            path: 'cards',
-            element: <CardsPage />,
-          },
-          {
-            path: 'all',
-            element: <AllComponents />,
-          },
-          {
-            path: 'forms',
-            element: <FormsPage />,
-          },
-          {
-            path: 'modals',
-            element: <ModalsPage />,
-          },
-          {
-            path: 'feedback',
-            element: <FeedbackPage />,
-          },
-          {
-            path: 'charts',
-            element: <ChartsPage />,
-          },
-          {
-            path: 'layout',
-            element: <LayoutPage />,
-          },
-          {
-            path: 'theme',
-            element: <ThemePage />,
-          },
-        ],
-      },
-      {
-        path: '*',
-        element: <Navigate to="/" replace />,
-      },
-    ],
+    children: childRoutes,
   },
 ]);

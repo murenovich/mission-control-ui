@@ -1,0 +1,6 @@
+@import 'tailwindcss' source(none);
+@source '../main.tsx';
+@source '../app/**/*.{js,ts,jsx,tsx}';
+@source '../lib/**/*.{js,ts,jsx,tsx}';
+@source not '../app/pages/components/**/*.{js,ts,jsx,tsx}';
+@source not '../app/components/ui/**/*.{js,ts,jsx,tsx}';
