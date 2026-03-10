@@ -1,5 +1,6 @@
 import { Cpu, HardDrive, MemoryStick, Zap, TrendingUp, AlertTriangle, CheckCircle, Server } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { getBadgeToneStyles } from '../../lib/badgeStyles';
 
 // Mock system metrics
 const systemMetrics = {
@@ -18,6 +19,9 @@ const recentAlerts = [
 
 export function SystemOverview() {
   const { isDarkMode } = useTheme();
+  const highSeverityStyles = getBadgeToneStyles('error', isDarkMode);
+  const mediumSeverityStyles = getBadgeToneStyles('warning', isDarkMode);
+  const lowSeverityStyles = getBadgeToneStyles('info', isDarkMode);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -35,13 +39,13 @@ export function SystemOverview() {
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'high':
-        return 'text-red-400 bg-red-500/20';
+        return highSeverityStyles.style;
       case 'medium':
-        return 'text-orange-400 bg-orange-500/20';
+        return mediumSeverityStyles.style;
       case 'low':
-        return 'text-cyan-400 bg-cyan-500/20';
+        return lowSeverityStyles.style;
       default:
-        return 'text-gray-400 bg-gray-500/20';
+        return getBadgeToneStyles('neutral', isDarkMode).style;
     }
   };
 
@@ -218,7 +222,7 @@ export function SystemOverview() {
                   <span className={`text-sm font-medium ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>
                     {alert.message}
                   </span>
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs ${getSeverityColor(alert.severity)}`}>
+                  <span className="inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium" style={getSeverityColor(alert.severity)}>
                     {alert.severity}
                   </span>
                 </div>

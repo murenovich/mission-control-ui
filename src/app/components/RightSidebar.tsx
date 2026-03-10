@@ -2,6 +2,7 @@ import { Play, Pause, MoreVertical, Circle, CheckCircle2, Timer, Repeat, X, Chev
 import { useState, useEffect, useRef } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useSidebar, type RightSidebarModule } from '../contexts/SidebarContext';
+import { getBadgeToneStyles } from '../lib/badgeStyles';
 
 interface Task {
   id: string;
@@ -242,16 +243,16 @@ export function RightSidebar() {
     }
   };
 
-  const getNotificationBadgeClassName = (category: NotificationItem['category']) => {
+  const getNotificationBadgeStyle = (category: NotificationItem['category']) => {
     switch (category) {
       case 'task':
-        return 'bg-green-500/15 text-green-400 border border-green-500/20';
+        return getBadgeToneStyles('success', isDarkMode).style;
       case 'system':
-        return 'bg-orange-500/15 text-orange-400 border border-orange-500/20';
+        return getBadgeToneStyles('warning', isDarkMode).style;
       case 'product':
-        return 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/20';
+        return getBadgeToneStyles('info', isDarkMode).style;
       case 'backup':
-        return 'bg-purple-500/15 text-purple-400 border border-purple-500/20';
+        return getBadgeToneStyles('purple', isDarkMode).style;
     }
   };
 
@@ -320,10 +321,10 @@ export function RightSidebar() {
                                 {notification.title}
                               </h4>
                               <div className="flex flex-wrap items-center gap-2">
-                                <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase tracking-[0.08em] ${getNotificationBadgeClassName(notification.category)}`}>
+                                <span className="rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-[0.08em]" style={getNotificationBadgeStyle(notification.category)}>
                                   {notification.category}
                                 </span>
-                                <span className={`px-2 py-0.5 rounded-full text-[10px] ${isDarkMode ? 'bg-white/5 text-white/55 border border-white/10' : 'bg-black/5 text-black/55 border border-black/10'}`}>
+                                <span className="rounded-full border px-2 py-0.5 text-[10px]" style={getBadgeToneStyles('neutral', isDarkMode).style}>
                                   {notification.source}
                                 </span>
                               </div>
