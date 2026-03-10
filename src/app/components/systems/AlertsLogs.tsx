@@ -1,6 +1,7 @@
-import { AlertTriangle, Info, XCircle, CheckCircle, Search, Filter, Download, Trash2 } from 'lucide-react';
+import { AlertTriangle, BellRing, CheckCircle, Clock3, Download, Filter, Info, Search, ShieldAlert, Trash2, XCircle } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useState } from 'react';
+import { getBadgeToneStyles } from '../../lib/badgeStyles';
 
 // Mock alerts and logs
 const alerts = [
@@ -71,9 +72,22 @@ export function AlertsLogs() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSeverity, setSelectedSeverity] = useState('all');
 
+  const highSeverityStyles = getBadgeToneStyles('error', isDarkMode);
+  const mediumSeverityStyles = getBadgeToneStyles('warning', isDarkMode);
+  const lowSeverityStyles = getBadgeToneStyles('info', isDarkMode);
+  const resolvedStyles = getBadgeToneStyles('success', isDarkMode);
+
   const filteredAlerts = alerts.filter(alert => {
-    if (selectedSeverity === 'all') return true;
-    return alert.severity === selectedSeverity;
+    const matchesSeverity = selectedSeverity === 'all' || alert.severity === selectedSeverity;
+    const query = searchQuery.trim().toLowerCase();
+    const matchesSearch = query.length === 0 || [
+      alert.title,
+      alert.message,
+      alert.source,
+      alert.timestamp,
+    ].some(value => value.toLowerCase().includes(query));
+
+    return matchesSeverity && matchesSearch;
   });
 
   const getTypeIcon = (type: string) => {
@@ -81,7 +95,7 @@ export function AlertsLogs() {
       case 'error':
         return <XCircle className="w-5 h-5 text-red-400" />;
       case 'warning':
-        return <AlertTriangle className="w-5 h-5 text-orange-400" />;
+        return <AlertTriangle className="w-5 h-5" style={{ color: mediumSeverityStyles.style.color }} />;
       case 'info':
         return <Info className="w-5 h-5 text-cyan-400" />;
       default:
@@ -92,18 +106,48 @@ export function AlertsLogs() {
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'high':
-        return 'text-red-400 bg-red-500/20';
+        return highSeverityStyles.style;
       case 'medium':
-        return 'text-orange-400 bg-orange-500/20';
+        return mediumSeverityStyles.style;
       case 'low':
-        return 'text-cyan-400 bg-cyan-500/20';
+        return lowSeverityStyles.style;
       default:
-        return 'text-gray-400 bg-gray-500/20';
+        return getBadgeToneStyles('neutral', isDarkMode).style;
     }
   };
 
   const unresolvedCount = alerts.filter(a => !a.resolved).length;
   const highSeverityCount = alerts.filter(a => a.severity === 'high' && !a.resolved).length;
+  const summaryCards = [
+    {
+      label: 'Total Alerts',
+      value: alerts.length,
+      icon: BellRing,
+      gradient: 'from-cyan-500 to-cyan-600',
+      valueClassName: isDarkMode ? 'text-white/90' : 'text-black/90',
+    },
+    {
+      label: 'Unresolved',
+      value: unresolvedCount,
+      icon: AlertTriangle,
+      gradient: 'from-orange-500 to-orange-600',
+      valueClassName: 'text-orange-400',
+    },
+    {
+      label: 'High Severity',
+      value: highSeverityCount,
+      icon: ShieldAlert,
+      gradient: 'from-red-500 to-red-600',
+      valueClassName: 'text-red-400',
+    },
+    {
+      label: 'Last 24h',
+      value: alerts.length,
+      icon: Clock3,
+      gradient: 'from-purple-500 to-purple-600',
+      valueClassName: isDarkMode ? 'text-white/90' : 'text-black/90',
+    },
+  ];
 
   return (
     <div className="space-y-6">
@@ -123,31 +167,25 @@ export function AlertsLogs() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className={`rounded-xl border p-4 ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-white/30 border-black/10'}`}>
-          <p className={`text-xs mb-1 ${isDarkMode ? 'text-white/50' : 'text-black/50'}`}>Total Alerts</p>
-          <p className={`text-2xl font-bold ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>
-            {alerts.length}
-          </p>
-        </div>
-        <div className={`rounded-xl border p-4 ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-white/30 border-black/10'}`}>
-          <p className={`text-xs mb-1 ${isDarkMode ? 'text-white/50' : 'text-black/50'}`}>Unresolved</p>
-          <p className={`text-2xl font-bold text-orange-400`}>
-            {unresolvedCount}
-          </p>
-        </div>
-        <div className={`rounded-xl border p-4 ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-white/30 border-black/10'}`}>
-          <p className={`text-xs mb-1 ${isDarkMode ? 'text-white/50' : 'text-black/50'}`}>High Severity</p>
-          <p className={`text-2xl font-bold text-red-400`}>
-            {highSeverityCount}
-          </p>
-        </div>
-        <div className={`rounded-xl border p-4 ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-white/30 border-black/10'}`}>
-          <p className={`text-xs mb-1 ${isDarkMode ? 'text-white/50' : 'text-black/50'}`}>Last 24h</p>
-          <p className={`text-2xl font-bold ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>
-            {alerts.length}
-          </p>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {summaryCards.map((card) => {
+          const Icon = card.icon;
+          return (
+            <div key={card.label} className={`rounded-xl border p-5 ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-white/30 border-black/10'}`}>
+              <div className="flex items-center justify-between mb-3">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br ${card.gradient}`}>
+                  <Icon className="w-5 h-5 text-white" />
+                </div>
+              </div>
+              <h3 className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-white/70' : 'text-black/70'}`}>
+                {card.label}
+              </h3>
+              <p className={`text-3xl font-bold ${card.valueClassName}`}>
+                {card.value}
+              </p>
+            </div>
+          );
+        })}
       </div>
 
       {/* Filters and Actions */}
@@ -225,7 +263,16 @@ export function AlertsLogs() {
 
       {/* Alerts List */}
       <div className="space-y-3">
-        {filteredAlerts.map((alert) => (
+        {filteredAlerts.length === 0 ? (
+          <div className={`rounded-xl border border-dashed p-5 ${isDarkMode ? 'bg-white/[0.03] border-white/10' : 'bg-black/[0.03] border-black/10'}`}>
+            <p className={`text-sm font-medium ${isDarkMode ? 'text-white/85' : 'text-black/85'}`}>
+              No alerts match the current filters.
+            </p>
+            <p className={`mt-1 text-sm ${isDarkMode ? 'text-white/50' : 'text-black/50'}`}>
+              Try clearing the search query or widening the severity filter.
+            </p>
+          </div>
+        ) : filteredAlerts.map((alert) => (
           <div
             key={alert.id}
             className={`p-4 rounded-xl border smooth-transition ${
@@ -247,11 +294,11 @@ export function AlertsLogs() {
                       <h3 className={`text-sm font-semibold ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>
                         {alert.title}
                       </h3>
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getSeverityColor(alert.severity)}`}>
+                      <span className="inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium" style={getSeverityColor(alert.severity)}>
                         {alert.severity}
                       </span>
                       {alert.resolved && (
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium text-green-400 bg-green-500/20`}>
+                        <span className="inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium" style={resolvedStyles.style}>
                           <CheckCircle className="w-3 h-3 mr-1" />
                           resolved
                         </span>

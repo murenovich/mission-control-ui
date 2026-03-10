@@ -1,6 +1,7 @@
 import { Wrench, Search, Book, ExternalLink, ChevronRight, CheckCircle, AlertTriangle } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useState } from 'react';
+import { getBadgeToneStyles } from '../../lib/badgeStyles';
 
 // Mock troubleshooting guides
 const guides = [
@@ -92,17 +93,21 @@ export function Troubleshooting() {
   const { isDarkMode } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGuide, setSelectedGuide] = useState<string | null>(null);
+  const highSeverityStyles = getBadgeToneStyles('error', isDarkMode);
+  const mediumSeverityStyles = getBadgeToneStyles('warning', isDarkMode);
+  const lowSeverityStyles = getBadgeToneStyles('success', isDarkMode);
+  const categoryBadgeStyles = getBadgeToneStyles('purple', isDarkMode);
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'high':
-        return 'text-red-400 bg-red-500/20';
+        return highSeverityStyles.style;
       case 'medium':
-        return 'text-orange-400 bg-orange-500/20';
+        return mediumSeverityStyles.style;
       case 'low':
-        return 'text-green-400 bg-green-500/20';
+        return lowSeverityStyles.style;
       default:
-        return 'text-gray-400 bg-gray-500/20';
+        return getBadgeToneStyles('neutral', isDarkMode).style;
     }
   };
 
@@ -210,16 +215,14 @@ export function Troubleshooting() {
             >
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium mb-2 ${
-                    isDarkMode ? 'bg-purple-500/20 text-purple-400' : 'bg-purple-500/20 text-purple-600'
-                  }`}>
+                  <span className="mb-2 inline-flex items-center rounded border px-2 py-1 text-xs font-medium" style={categoryBadgeStyles.style}>
                     {guide.category}
                   </span>
                   <h3 className={`text-sm font-semibold mt-2 ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>
                     {guide.title}
                   </h3>
                 </div>
-                <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${getSeverityColor(guide.severity)}`}>
+                <span className="inline-flex items-center rounded border px-2 py-1 text-xs font-medium" style={getSeverityColor(guide.severity)}>
                   {guide.severity}
                 </span>
               </div>

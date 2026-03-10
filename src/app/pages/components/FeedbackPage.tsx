@@ -1,11 +1,25 @@
 import { useState } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { CheckCircle, AlertCircle, Info, AlertTriangle, Loader, Bell, X } from 'lucide-react';
+import { getAlertBannerStyles } from '../../lib/alertStyles';
+import { getBadgeToneStyles } from '../../lib/badgeStyles';
 
 export default function FeedbackPage() {
   const { isDarkMode } = useTheme();
   const [showToast, setShowToast] = useState(false);
   const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info'>('success');
+  const successAlertStyles = getAlertBannerStyles('success', isDarkMode);
+  const errorAlertStyles = getAlertBannerStyles('error', isDarkMode);
+  const warningAlertStyles = getAlertBannerStyles('warning', isDarkMode);
+  const infoAlertStyles = getAlertBannerStyles('info', isDarkMode);
+  const cyanBadgeStyles = getBadgeToneStyles('info', isDarkMode);
+  const purpleBadgeStyles = getBadgeToneStyles('purple', isDarkMode);
+  const orangeBadgeStyles = getBadgeToneStyles('orange', isDarkMode);
+  const greenBadgeStyles = getBadgeToneStyles('success', isDarkMode);
+  const redBadgeStyles = getBadgeToneStyles('error', isDarkMode);
+  const yellowBadgeStyles = getBadgeToneStyles('warning', isDarkMode);
+  const pinkBadgeStyles = getBadgeToneStyles('pink', isDarkMode);
+  const neutralBadgeStyles = getBadgeToneStyles('neutral', isDarkMode);
 
   const showToastNotification = (type: 'success' | 'error' | 'warning' | 'info') => {
     setToastType(type);
@@ -37,57 +51,49 @@ export default function FeedbackPage() {
         </div>
 
         <div className="space-y-4">
-          <div className={`p-4 rounded-xl flex items-start gap-3 ${
-            isDarkMode ? 'bg-green-500/10 border border-green-500/20' : 'bg-green-50 border border-green-200'
-          }`}>
-            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+          <div className={successAlertStyles.containerClassName} style={successAlertStyles.containerStyle}>
+            <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={successAlertStyles.iconStyle} />
             <div className="flex-1">
-              <p className={`font-medium mb-1 ${isDarkMode ? 'text-green-400' : 'text-green-700'}`}>
+              <p className="font-medium mb-1" style={successAlertStyles.titleStyle}>
                 Success
               </p>
-              <p className={`text-sm ${isDarkMode ? 'text-green-300/80' : 'text-green-600'}`}>
+              <p className="text-sm" style={successAlertStyles.bodyStyle}>
                 Your changes have been saved successfully
               </p>
             </div>
           </div>
 
-          <div className={`p-4 rounded-xl flex items-start gap-3 ${
-            isDarkMode ? 'bg-red-500/10 border border-red-500/20' : 'bg-red-50 border border-red-200'
-          }`}>
-            <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+          <div className={errorAlertStyles.containerClassName} style={errorAlertStyles.containerStyle}>
+            <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" style={errorAlertStyles.iconStyle} />
             <div className="flex-1">
-              <p className={`font-medium mb-1 ${isDarkMode ? 'text-red-400' : 'text-red-700'}`}>
+              <p className="font-medium mb-1" style={errorAlertStyles.titleStyle}>
                 Error
               </p>
-              <p className={`text-sm ${isDarkMode ? 'text-red-300/80' : 'text-red-600'}`}>
+              <p className="text-sm" style={errorAlertStyles.bodyStyle}>
                 Something went wrong. Please try again
               </p>
             </div>
           </div>
 
-          <div className={`p-4 rounded-xl flex items-start gap-3 ${
-            isDarkMode ? 'bg-yellow-500/10 border border-yellow-500/20' : 'bg-yellow-50 border border-yellow-200'
-          }`}>
-            <AlertTriangle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+          <div className={warningAlertStyles.containerClassName} style={warningAlertStyles.containerStyle}>
+            <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" style={warningAlertStyles.iconStyle} />
             <div className="flex-1">
-              <p className={`font-medium mb-1 ${isDarkMode ? 'text-yellow-400' : 'text-yellow-700'}`}>
+              <p className="font-medium mb-1" style={warningAlertStyles.titleStyle}>
                 Warning
               </p>
-              <p className={`text-sm ${isDarkMode ? 'text-yellow-300/80' : 'text-yellow-600'}`}>
+              <p className="text-sm" style={warningAlertStyles.bodyStyle}>
                 This action cannot be undone
               </p>
             </div>
           </div>
 
-          <div className={`p-4 rounded-xl flex items-start gap-3 ${
-            isDarkMode ? 'bg-cyan-500/10 border border-cyan-500/20' : 'bg-cyan-50 border border-cyan-200'
-          }`}>
-            <Info className="w-5 h-5 text-cyan-500 flex-shrink-0 mt-0.5" />
+          <div className={infoAlertStyles.containerClassName} style={infoAlertStyles.containerStyle}>
+            <Info className="w-5 h-5 flex-shrink-0 mt-0.5" style={infoAlertStyles.iconStyle} />
             <div className="flex-1">
-              <p className={`font-medium mb-1 ${isDarkMode ? 'text-cyan-400' : 'text-cyan-700'}`}>
+              <p className="font-medium mb-1" style={infoAlertStyles.titleStyle}>
                 Info
               </p>
-              <p className={`text-sm ${isDarkMode ? 'text-cyan-300/80' : 'text-cyan-600'}`}>
+              <p className="text-sm" style={infoAlertStyles.bodyStyle}>
                 New features are now available
               </p>
             </div>
@@ -211,33 +217,33 @@ export default function FeedbackPage() {
         <div>
           <h3 className={`text-lg mb-4 ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>Color Variants</h3>
           <div className="flex flex-wrap gap-3">
-            <span className="px-3 py-1 rounded-lg text-sm bg-cyan-500/20 text-cyan-400">Cyan</span>
-            <span className="px-3 py-1 rounded-lg text-sm bg-purple-500/20 text-purple-400">Purple</span>
-            <span className="px-3 py-1 rounded-lg text-sm bg-orange-500/20 text-orange-400">Orange</span>
-            <span className="px-3 py-1 rounded-lg text-sm bg-green-500/20 text-green-400">Green</span>
-            <span className="px-3 py-1 rounded-lg text-sm bg-red-500/20 text-red-400">Red</span>
-            <span className="px-3 py-1 rounded-lg text-sm bg-yellow-500/20 text-yellow-400">Yellow</span>
-            <span className="px-3 py-1 rounded-lg text-sm bg-pink-500/20 text-pink-400">Pink</span>
+            <span className="rounded-lg border px-3 py-1 text-sm" style={cyanBadgeStyles.style}>Cyan</span>
+            <span className="rounded-lg border px-3 py-1 text-sm" style={purpleBadgeStyles.style}>Purple</span>
+            <span className="rounded-lg border px-3 py-1 text-sm" style={orangeBadgeStyles.style}>Orange</span>
+            <span className="rounded-lg border px-3 py-1 text-sm" style={greenBadgeStyles.style}>Green</span>
+            <span className="rounded-lg border px-3 py-1 text-sm" style={redBadgeStyles.style}>Red</span>
+            <span className="rounded-lg border px-3 py-1 text-sm" style={yellowBadgeStyles.style}>Yellow</span>
+            <span className="rounded-lg border px-3 py-1 text-sm" style={pinkBadgeStyles.style}>Pink</span>
           </div>
         </div>
 
         <div>
           <h3 className={`text-lg mb-4 ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>Status Badges</h3>
           <div className="flex flex-wrap gap-3">
-            <span className="px-3 py-1 rounded-lg text-sm bg-green-500/20 text-green-400 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-green-400"></span>
+            <span className="flex items-center gap-2 rounded-lg border px-3 py-1 text-sm" style={greenBadgeStyles.style}>
+              <span className="h-2 w-2 rounded-full" style={greenBadgeStyles.dotStyle}></span>
               Active
             </span>
-            <span className="px-3 py-1 rounded-lg text-sm bg-yellow-500/20 text-yellow-400 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-yellow-400"></span>
+            <span className="flex items-center gap-2 rounded-lg border px-3 py-1 text-sm" style={yellowBadgeStyles.style}>
+              <span className="h-2 w-2 rounded-full" style={yellowBadgeStyles.dotStyle}></span>
               Pending
             </span>
-            <span className="px-3 py-1 rounded-lg text-sm bg-red-500/20 text-red-400 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-red-400"></span>
+            <span className="flex items-center gap-2 rounded-lg border px-3 py-1 text-sm" style={redBadgeStyles.style}>
+              <span className="h-2 w-2 rounded-full" style={redBadgeStyles.dotStyle}></span>
               Inactive
             </span>
-            <span className={`px-3 py-1 rounded-lg text-sm ${isDarkMode ? 'bg-white/10 text-white/60' : 'bg-black/10 text-black/60'} flex items-center gap-2`}>
-              <span className={`w-2 h-2 rounded-full ${isDarkMode ? 'bg-white/60' : 'bg-black/60'}`}></span>
+            <span className="flex items-center gap-2 rounded-lg border px-3 py-1 text-sm" style={neutralBadgeStyles.style}>
+              <span className="h-2 w-2 rounded-full" style={neutralBadgeStyles.dotStyle}></span>
               Draft
             </span>
           </div>
@@ -246,9 +252,9 @@ export default function FeedbackPage() {
         <div>
           <h3 className={`text-lg mb-4 ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>Priority Badges</h3>
           <div className="flex flex-wrap gap-3">
-            <span className="px-3 py-1 rounded-lg text-sm bg-red-500/20 text-red-400 font-medium">High Priority</span>
-            <span className="px-3 py-1 rounded-lg text-sm bg-orange-500/20 text-orange-400 font-medium">Medium Priority</span>
-            <span className="px-3 py-1 rounded-lg text-sm bg-cyan-500/20 text-cyan-400 font-medium">Low Priority</span>
+            <span className="rounded-lg border px-3 py-1 text-sm font-medium" style={redBadgeStyles.style}>High Priority</span>
+            <span className="rounded-lg border px-3 py-1 text-sm font-medium" style={orangeBadgeStyles.style}>Medium Priority</span>
+            <span className="rounded-lg border px-3 py-1 text-sm font-medium" style={cyanBadgeStyles.style}>Low Priority</span>
           </div>
         </div>
 
