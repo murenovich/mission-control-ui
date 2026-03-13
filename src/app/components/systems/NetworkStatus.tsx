@@ -1,4 +1,4 @@
-import { Wifi, WifiOff, Globe, Activity, ArrowUpDown, Clock, Signal } from 'lucide-react';
+import { Wifi, Globe, Activity, ArrowUpDown, Clock, Signal, Search, Route, Gauge, RotateCcw, type LucideIcon } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 
 // Mock network data
@@ -18,6 +18,19 @@ const connections = [
   { id: '4', name: 'Database Server', ip: 'db.example.com', status: 'connected', latency: 8, uptime: '99.5%' },
   { id: '5', name: 'CDN Provider', ip: 'cdn.cloudflare.com', status: 'connected', latency: 23, uptime: '99.9%' },
   { id: '6', name: 'Backup Server', ip: 'backup.example.com', status: 'degraded', latency: 156, uptime: '95.2%' },
+];
+
+const networkTools: Array<{
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  color: string;
+  accent: string;
+}> = [
+  { id: 'ping', label: 'Ping Test', icon: Search, color: 'from-cyan-500 to-cyan-600', accent: 'text-cyan-400' },
+  { id: 'trace-route', label: 'Trace Route', icon: Route, color: 'from-blue-500 to-blue-600', accent: 'text-blue-400' },
+  { id: 'speed-test', label: 'Speed Test', icon: Gauge, color: 'from-purple-500 to-purple-600', accent: 'text-purple-400' },
+  { id: 'flush-dns', label: 'Flush DNS', icon: RotateCcw, color: 'from-orange-500 to-orange-600', accent: 'text-orange-400' },
 ];
 
 export function NetworkStatus() {
@@ -254,22 +267,32 @@ export function NetworkStatus() {
 
       {/* Network Tools */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <button className={`p-4 rounded-xl border text-center smooth-transition ${isDarkMode ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white/30 border-black/10 hover:bg-white/40'}`}>
-          <div className="text-2xl mb-2">🔍</div>
-          <span className={`text-xs ${isDarkMode ? 'text-white/70' : 'text-black/70'}`}>Ping Test</span>
-        </button>
-        <button className={`p-4 rounded-xl border text-center smooth-transition ${isDarkMode ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white/30 border-black/10 hover:bg-white/40'}`}>
-          <div className="text-2xl mb-2">📡</div>
-          <span className={`text-xs ${isDarkMode ? 'text-white/70' : 'text-black/70'}`}>Trace Route</span>
-        </button>
-        <button className={`p-4 rounded-xl border text-center smooth-transition ${isDarkMode ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white/30 border-black/10 hover:bg-white/40'}`}>
-          <div className="text-2xl mb-2">⚡</div>
-          <span className={`text-xs ${isDarkMode ? 'text-white/70' : 'text-black/70'}`}>Speed Test</span>
-        </button>
-        <button className={`p-4 rounded-xl border text-center smooth-transition ${isDarkMode ? 'bg-white/5 border-white/10 hover:bg-white/10' : 'bg-white/30 border-black/10 hover:bg-white/40'}`}>
-          <div className="text-2xl mb-2">🔄</div>
-          <span className={`text-xs ${isDarkMode ? 'text-white/70' : 'text-black/70'}`}>Flush DNS</span>
-        </button>
+        {networkTools.map((tool) => {
+          const Icon = tool.icon;
+
+          return (
+            <button
+              key={tool.id}
+              className={`p-4 rounded-xl border text-left smooth-transition ${
+                isDarkMode
+                  ? 'bg-white/5 border-white/10 hover:bg-white/10'
+                  : 'bg-white/30 border-black/10 hover:bg-white/40'
+              }`}
+            >
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br ${tool.color}`}>
+                  <Icon className="w-5 h-5 text-white" />
+                </div>
+                <span className={`text-[11px] font-medium uppercase tracking-[0.18em] ${tool.accent}`}>
+                  Tool
+                </span>
+              </div>
+              <span className={`text-sm font-medium ${isDarkMode ? 'text-white/80' : 'text-black/80'}`}>
+                {tool.label}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
