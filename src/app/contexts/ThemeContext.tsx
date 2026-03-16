@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 interface ThemeContextType {
   isDarkMode: boolean;
@@ -9,6 +9,18 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    root.classList.toggle('dark', isDarkMode);
+    root.style.colorScheme = isDarkMode ? 'dark' : 'light';
+
+    return () => {
+      root.classList.remove('dark');
+      root.style.colorScheme = '';
+    };
+  }, [isDarkMode]);
 
   const toggleTheme = () => {
     setIsDarkMode(prev => !prev);

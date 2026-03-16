@@ -1,6 +1,7 @@
 import { X, Calendar, Type } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useState } from 'react';
+import { useAccessibleModal } from '../ui/useAccessibleModal';
 
 interface LogMoodModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface LogMoodModalProps {
 
 export function LogMoodModal({ isOpen, onClose }: LogMoodModalProps) {
   const { isDarkMode } = useTheme();
+  const { contentRef, titleId } = useAccessibleModal({ isOpen, onClose });
   const [selectedMood, setSelectedMood] = useState<number | null>(null);
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [note, setNote] = useState('');
@@ -46,6 +48,11 @@ export function LogMoodModal({ isOpen, onClose }: LogMoodModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
       <div 
+        ref={contentRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
         className={`w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl border smooth-transition ${
           isDarkMode 
             ? 'bg-[#0a0a0f]/95 border-white/10' 
@@ -57,11 +64,12 @@ export function LogMoodModal({ isOpen, onClose }: LogMoodModalProps) {
         <div className={`sticky top-0 flex items-center justify-between p-6 border-b ${
           isDarkMode ? 'bg-[#0a0a0f]/95 border-white/10' : 'bg-white/95 border-black/10'
         }`}>
-          <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>
+          <h2 id={titleId} className={`text-2xl font-bold ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>
             Log Your Mood
           </h2>
           <button
             onClick={onClose}
+            aria-label="Close log mood dialog"
             className={`p-2 rounded-lg smooth-transition ${
               isDarkMode
                 ? 'hover:bg-white/10 text-white/60 hover:text-white/90'
@@ -83,7 +91,9 @@ export function LogMoodModal({ isOpen, onClose }: LogMoodModalProps) {
               {moods.map((mood) => (
                 <button
                   key={mood.score}
+                  type="button"
                   onClick={() => setSelectedMood(mood.score)}
+                  aria-pressed={selectedMood === mood.score}
                   className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 smooth-transition ${
                     selectedMood === mood.score
                       ? 'border-purple-400 bg-purple-500/20 scale-105'
@@ -110,7 +120,9 @@ export function LogMoodModal({ isOpen, onClose }: LogMoodModalProps) {
               {activities.map((activity) => (
                 <button
                   key={activity}
+                  type="button"
                   onClick={() => toggleActivity(activity)}
+                  aria-pressed={selectedActivities.includes(activity)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium smooth-transition border ${
                     selectedActivities.includes(activity)
                       ? isDarkMode
@@ -174,6 +186,7 @@ export function LogMoodModal({ isOpen, onClose }: LogMoodModalProps) {
           isDarkMode ? 'bg-[#0a0a0f]/95 border-white/10' : 'bg-white/95 border-black/10'
         }`}>
           <button
+            type="button"
             onClick={onClose}
             className={`px-5 py-2.5 rounded-lg text-sm font-medium smooth-transition ${
               isDarkMode
@@ -184,6 +197,7 @@ export function LogMoodModal({ isOpen, onClose }: LogMoodModalProps) {
             Cancel
           </button>
           <button
+            type="button"
             onClick={handleSubmit}
             disabled={!selectedMood}
             className={`px-5 py-2.5 rounded-lg text-sm font-medium smooth-transition border ${

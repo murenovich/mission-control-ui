@@ -14,7 +14,7 @@ export function Layout() {
 
   return (
     <div 
-      className={`h-screen min-h-screen w-full flex overflow-hidden ${isDarkMode ? 'dark-mode' : 'light-mode'}`}
+      className={`h-screen min-h-screen w-full flex overflow-hidden ${isDarkMode ? 'dark dark-mode' : 'light-mode'}`}
       style={{ background: isDarkMode ? '#0a0a0f' : '#f5f7fa' }}
     >
       {/* Icon navigation bar (leftmost) */}

@@ -1,6 +1,7 @@
 import { X, Calendar, User, Flag, Tag, FileText, Link as LinkIcon } from 'lucide-react';
 import { useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAccessibleModal } from '../ui/useAccessibleModal';
 import {
   PROJECT_PRIORITY_OPTIONS,
   PROJECT_STATUS_OPTIONS,
@@ -18,6 +19,7 @@ interface ProjectModalProps {
 
 export function ProjectModal({ project, onClose, onSave }: ProjectModalProps) {
   const { isDarkMode } = useTheme();
+  const { contentRef, titleId } = useAccessibleModal({ isOpen: true, onClose });
   const [formData, setFormData] = useState<ProjectFormValues>({
     title: project?.title || '',
     description: project?.description || '',
@@ -60,10 +62,16 @@ export function ProjectModal({ project, onClose, onSave }: ProjectModalProps) {
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Modal */}
       <div
+        ref={contentRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
         className={`relative w-full max-w-2xl rounded-2xl border shadow-2xl ${
           isDarkMode ? 'bg-[#0f0f19]/95 border-white/10' : 'bg-white/95 border-black/10'
         }`}
@@ -71,11 +79,12 @@ export function ProjectModal({ project, onClose, onSave }: ProjectModalProps) {
       >
         {/* Header */}
         <div className={`flex items-center justify-between p-6 border-b ${isDarkMode ? 'border-white/10' : 'border-black/10'}`}>
-          <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>
+          <h2 id={titleId} className={`text-xl font-bold ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>
             {project ? 'Edit Project' : 'New Project'}
           </h2>
           <button
             onClick={onClose}
+            aria-label={project ? 'Close edit project dialog' : 'Close new project dialog'}
             className={`p-2 rounded-lg smooth-transition ${
               isDarkMode ? 'hover:bg-white/10' : 'hover:bg-black/10'
             }`}
@@ -262,6 +271,7 @@ export function ProjectModal({ project, onClose, onSave }: ProjectModalProps) {
                   <button
                     type="button"
                     onClick={() => handleRemoveTag(tag)}
+                    aria-label={`Remove ${tag} tag`}
                     className="hover:text-red-400"
                   >
                     <X className="w-3 h-3" />

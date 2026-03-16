@@ -1,6 +1,7 @@
 import { X, Zap, Target, Save } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useState } from 'react';
+import { useAccessibleModal } from '../ui/useAccessibleModal';
 
 interface AddSkillModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface AddSkillModalProps {
 
 export function AddSkillModal({ isOpen, onClose }: AddSkillModalProps) {
   const { isDarkMode } = useTheme();
+  const { contentRef, titleId } = useAccessibleModal({ isOpen, onClose });
   const [formData, setFormData] = useState({
     skillName: '',
     category: 'Technical',
@@ -36,9 +38,14 @@ export function AddSkillModal({ isOpen, onClose }: AddSkillModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
 
       <div
+        ref={contentRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
         className={`relative w-full max-w-lg rounded-xl border shadow-2xl ${
           isDarkMode ? 'bg-[#0f0f1a]/95 border-white/10' : 'bg-white/95 border-black/10'
         }`}
@@ -50,7 +57,7 @@ export function AddSkillModal({ isOpen, onClose }: AddSkillModalProps) {
               <Zap className="w-5 h-5 text-cyan-400" />
             </div>
             <div>
-              <h2 className={`text-lg font-semibold ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>
+              <h2 id={titleId} className={`text-lg font-semibold ${isDarkMode ? 'text-white/90' : 'text-black/90'}`}>
                 Add Skill
               </h2>
               <p className={`text-xs ${isDarkMode ? 'text-white/60' : 'text-black/60'}`}>
@@ -60,6 +67,7 @@ export function AddSkillModal({ isOpen, onClose }: AddSkillModalProps) {
           </div>
           <button
             onClick={onClose}
+            aria-label="Close add skill dialog"
             className={`w-8 h-8 rounded-lg flex items-center justify-center smooth-transition ${
               isDarkMode ? 'hover:bg-white/10 text-white/60 hover:text-white/90' : 'hover:bg-black/10 text-black/60 hover:text-black/90'
             }`}
@@ -97,6 +105,7 @@ export function AddSkillModal({ isOpen, onClose }: AddSkillModalProps) {
                   key={category}
                   type="button"
                   onClick={() => setFormData({ ...formData, category })}
+                  aria-pressed={formData.category === category}
                   className={`px-3 py-2 rounded-lg text-sm font-medium smooth-transition border ${
                     formData.category === category
                       ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'
@@ -121,6 +130,7 @@ export function AddSkillModal({ isOpen, onClose }: AddSkillModalProps) {
                   key={level.value}
                   type="button"
                   onClick={() => setFormData({ ...formData, currentLevel: level.value })}
+                  aria-pressed={formData.currentLevel === level.value}
                   className={`p-3 rounded-lg text-center smooth-transition border ${
                     formData.currentLevel === level.value
                       ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'
@@ -147,6 +157,7 @@ export function AddSkillModal({ isOpen, onClose }: AddSkillModalProps) {
                   key={level.value}
                   type="button"
                   onClick={() => setFormData({ ...formData, targetLevel: level.value })}
+                  aria-pressed={formData.targetLevel === level.value}
                   className={`p-3 rounded-lg text-center smooth-transition border ${
                     formData.targetLevel === level.value
                       ? 'bg-purple-500/20 text-purple-400 border-purple-500/30'
