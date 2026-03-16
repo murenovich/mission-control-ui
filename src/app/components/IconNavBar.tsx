@@ -6,18 +6,18 @@ import { Link } from 'react-router';
 interface NavIcon {
   id: string;
   icon: ElementType;
-  active?: boolean;
   color?: string;
+  label: string;
 }
 
 const navIcons: NavIcon[] = [
-  { id: 'home', icon: Home, active: true, color: 'from-orange-500 to-orange-600' },
-  { id: 'health', icon: Activity, color: 'from-green-500 to-emerald-600' },
-  { id: 'projects', icon: CheckSquare, color: 'from-purple-500 to-purple-600' },
-  { id: 'systems', icon: Server, color: 'from-cyan-500 to-cyan-600' },
-  { id: 'messages', icon: MessageSquare, color: 'from-purple-400 to-purple-500' },
-  { id: 'newsfeed', icon: Newspaper, color: 'from-orange-400 to-orange-500' },
-  { id: 'components', icon: Layout, color: 'from-pink-500 to-pink-600' },
+  { id: 'home', icon: Home, color: 'from-orange-500 to-orange-600', label: 'Home dashboard' },
+  { id: 'health', icon: Activity, color: 'from-green-500 to-emerald-600', label: 'Health overview' },
+  { id: 'projects', icon: CheckSquare, color: 'from-purple-500 to-purple-600', label: 'Projects overview' },
+  { id: 'systems', icon: Server, color: 'from-cyan-500 to-cyan-600', label: 'Systems overview' },
+  { id: 'messages', icon: MessageSquare, color: 'from-purple-400 to-purple-500', label: 'Messages' },
+  { id: 'newsfeed', icon: Newspaper, color: 'from-orange-400 to-orange-500', label: 'Newsfeed' },
+  { id: 'components', icon: Layout, color: 'from-pink-500 to-pink-600', label: 'Component library' },
 ];
 
 interface IconNavBarProps {
@@ -29,11 +29,12 @@ export function IconNavBar({ activeSection, className = '' }: IconNavBarProps) {
   const { isDarkMode } = useTheme();
 
   return (
-    <div 
+    <nav
+      aria-label="Primary navigation"
       className={`w-16 lg:w-20 shrink-0 sticky top-0 h-screen flex flex-col items-center justify-start py-6 ${className}`}
     >
       <div className={`space-y-3 p-3 mx-2 rounded-full ${isDarkMode ? 'bg-white/10' : 'bg-black/10'} backdrop-blur-md border ${isDarkMode ? 'border-white/10' : 'border-black/10'}`}>
-        {navIcons.map((item, index) => {
+        {navIcons.map((item) => {
           const Icon = item.icon;
           const isActive = activeSection === item.id;
           
@@ -52,6 +53,8 @@ export function IconNavBar({ activeSection, className = '' }: IconNavBarProps) {
             <Link
               key={item.id}
               to={getLink()}
+              aria-label={item.label}
+              aria-current={isActive ? 'page' : undefined}
               className={`
                 w-12 h-12 rounded-full flex items-center justify-center
                 smooth-transition group relative
@@ -63,7 +66,8 @@ export function IconNavBar({ activeSection, className = '' }: IconNavBarProps) {
                 }
               `}
             >
-              <Icon 
+              <Icon
+                aria-hidden="true"
                 className={`w-5 h-5 ${
                   isActive && item.color
                     ? 'text-white'
@@ -81,6 +85,6 @@ export function IconNavBar({ activeSection, className = '' }: IconNavBarProps) {
           );
         })}
       </div>
-    </div>
+    </nav>
   );
 }
